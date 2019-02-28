@@ -21,6 +21,8 @@ auto-deconsolidate-group.scpt
 
 Trigger scripts in DEVONthink are great, except they suffer from one problem: they are only run when you select a group in DEVONthink through the user interface&mdash;they are _not_ run when you deselect the group, or when you add something to the group, or indeed at any other time.  This leads to the problem that if you have added something to the group, it will not be visible in the external indexed folder unless you do something such as select another group in DEVONthink and then re-select the one with the trigger script.  I find this too easy to forget, so I developed a scheme involving this simple script, `auto-deconsolidate-group.scpt`.
 
+The script relies on you tagging the groups you want auto-deconsolidated with a tag that the script will look for.  There is a variable at the top of the script that sets the name of the tag.  By default, the tag name is `deconsolidate`.
+
 I use this script through [Keyboard Maestro](https://www.keyboardmaestro.com/main/).  I have a scheduled macro that executes this program every hour when DEVONthink Pro is running but is not the front application.  This makes DEVONthink run the deconsolidation operation in the background automatically, yet avoids interrupting me while I'm actively working in DEVONthink.
 
 The Keyboard Maestro macro is included here in the file [auto-deconsolidate DEVONthink indexed groups](auto-deconsolidate-DEVONthink-indexed-groups.kmmacros).
