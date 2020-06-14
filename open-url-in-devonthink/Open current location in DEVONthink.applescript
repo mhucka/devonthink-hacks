@@ -30,4 +30,5 @@ tell application id "DNtp"
 	set theGroup to preferred import destination
 	set theBookmark to create record with {name:theTitle, type:bookmark, URL:theURL} in theGroup
 	open window for record theBookmark
+	activate
 end tell
