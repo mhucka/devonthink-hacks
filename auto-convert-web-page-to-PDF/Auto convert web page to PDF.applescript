@@ -1,9 +1,9 @@
 # =============================================================================
-# @file    Auto convert web page to PDF.applescript
+# @file	   Auto convert web page to PDF.applescript
 # @brief   Script for DEVONthink to convert a webpage bookmark to PDF
 # @author  Michael Hucka <mhucka@caltech.edu>
 # @license MIT license -- please see the file LICENSE in the parent directory
-# @repo    https://github.com/mhucka/devonthink-hacks
+# @repo	   https://github.com/mhucka/devonthink-hacks
 # =============================================================================
 
 # This uses heuristics to try to load page content before creating a
@@ -19,25 +19,23 @@ on performSmartRule(theRecords)
 		repeat with theRecord in theRecords
 			set theWindow to open window for record theRecord
 			delay 2
+
+			# Some pages load content dynamically, with images not displayed
+			# until they come into view and/or the full extent of the page
+			# not made visible until the bottom is reached.	 This is a hopeless
+			# situation in general, but the following heuristics work for many
+			# cases.  We first try to scroll the window by quarters, then for
+			# good measure, use AppleScript to send the "go to the end" key
+			# to the window.
+			repeat 4 times
+				do JavaScript "window.scrollTo(0, document.body.scrollHeight/4)" in theWindow
+				delay 1
+			end repeat
 			tell application "System Events"
-				# Some pages don't load images unless they come into view.
-				# Page down a few times to try to trigger image loading.
-				# This doesn't work for all pages, and an arbitrary no. of
-				# times is not a general solution.  This is a hopeless 
-				# situation, but maybe this will get _some_ images.
-				repeat 3 times
-					key code 121
-					delay 1
-				end repeat
-				# Some pages don't load the full content until the user
-				# reaches the bottom. There's no telling how much there
-				# is, so this is another hopeless situation. Repeat this
-				# a few times to try to load a decent amount.
-				repeat 2 times
-					key code 119
-					delay 1
-				end repeat
+				key code 119		# "End" key
 			end tell
+			delay 1
+
 			convert record theRecord to single page PDF document
 			close theWindow
 		end repeat
