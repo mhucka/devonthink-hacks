@@ -22,10 +22,10 @@ on performSmartRule(theRecords)
 
 			# Some pages load content dynamically, with elements not displayed
 			# until they come into view. This is a hopeless situation generally
-            # but the following heuristic improves outcomes for some cases.
-            # We scroll the window by fifths to try to trigger loading.
-            repeat with n from 1 to 5
-                set scroll to "window.scrollTo(0," & n & "*document.body.scrollHeight/5)"
+			# but the following heuristic improves outcomes for some cases.
+			# We scroll the window by fifths to try to trigger loading.
+			repeat with n from 1 to 5
+				set scroll to "window.scrollTo(0," & n & "*document.body.scrollHeight/5)"
 				do JavaScript scroll in current tab of theWindow
 				delay 1
 			end
