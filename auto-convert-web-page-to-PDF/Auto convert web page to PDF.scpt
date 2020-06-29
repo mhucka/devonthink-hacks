@@ -20,21 +20,15 @@ on performSmartRule(theRecords)
 			set theWindow to open window for record theRecord
 			delay 2
 
-			# Some pages load content dynamically, with images not displayed
-			# until they come into view and/or the full extent of the page
-			# not made visible until the bottom is reached.	 This is a hopeless
-			# situation in general, but the following heuristics work for many
-			# cases.  We first try to scroll the window by quarters, then for
-			# good measure, use AppleScript to send the "go to the end" key
-			# to the window.
-			repeat 4 times
-				do JavaScript "window.scrollTo(0, document.body.scrollHeight/4)" in theWindow
+			# Some pages load content dynamically, with elements not displayed
+			# until they come into view. This is a hopeless situation generally
+			# but the following heuristic improves outcomes for some cases.
+			# We scroll the window by fifths to try to trigger loading.
+			repeat with n from 1 to 5
+				set scroll to "window.scrollTo(0," & n & "*document.body.scrollHeight/5)"
+				do JavaScript scroll in current tab of theWindow
 				delay 1
 			end repeat
-			tell application "System Events"
-				key code 119 # "End" key
-			end tell
-			delay 1
 
 			convert record theRecord to single page PDF document
 			close theWindow
