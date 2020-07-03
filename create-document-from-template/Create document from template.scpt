@@ -39,5 +39,8 @@ tell application id "DNtp"
 
 	set newRecord to import templatePath to current group
 	set the name of newRecord to docName
+	try
+		perform smart rule "auto-label my notes" record newRecord
+	end try
 end tell
 
