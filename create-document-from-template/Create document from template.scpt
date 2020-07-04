@@ -38,6 +38,7 @@ tell application id "DNtp"
 	end repeat
 
 	set newRecord to import templatePath to current group
+	set creation date of newRecord to current date
 	set the name of newRecord to docName
 	try
 		perform smart rule "auto-label my notes" record newRecord
