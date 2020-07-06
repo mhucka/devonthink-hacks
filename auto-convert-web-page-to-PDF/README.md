@@ -8,7 +8,7 @@ In general, capturing dynamically-generated pages is a hopeless difficulty task.
 1. A Smart Rule in DEVONthink that is triggered when a new web page bookmark is created if the bookmark contains a certain tag; this Smart Rule then runs an AppleScript program to open the page, scroll down in it, and convert the resulting window contents to PDF.
 2. A custom bookmarklet that can be used from Safari that, when invoked, sends a URL to DEVONthink with the required tag.
 
-The AppleScript is contained in this directory. To use it as an embedded script from a DEVONthink Smart Rule, you need to copy the compiled version (i.e., the `.scpt` file) to your `~/Library/Application Scripts/com.devon-technologies.think3/Smart Rules` directory.
+The AppleScript is contained in this directory. To use it as an embedded script from a DEVONthink Smart Rule, you need to copy the script file to your `~/Library/Application Scripts/com.devon-technologies.think3/Smart Rules` directory.
 
 The following image shows the configuration of my Smart Rule in DEVONthink:
 
