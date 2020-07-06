@@ -14,7 +14,7 @@
 on performSmartRule(theRecords)
 	repeat with selected in theRecords
 		set theWindow to open window for record selected
-		delay 1
+		delay 2
 
 		# Wait until it's finished loading.
 		repeat while loading of theWindow
@@ -31,10 +31,13 @@ on performSmartRule(theRecords)
 			delay 0.75
 		end
 
-		# Scroll back to the top. This hack was motivated by trying to deal
-		# with Twitter's quirky behavior, but may have value elsewhere.
+                # Return to the top. Do it twice because sometimes on some
+		# pages (notably Twitter), the first attempt gets stuck in
+		# some random location.  (Ugh, what a hack this is.)
 		do JavaScript "window.scrollTo(0,0)" in current tab of theWindow
 		delay 0.5
+		do JavaScript "window.scrollTo(0,0)" in current tab of theWindow
+		delay 0.25
 
 		# Get the content of this current viewer window, in PDF form.
 		# Doing it this way instead of using DEVONthink's "convert record
