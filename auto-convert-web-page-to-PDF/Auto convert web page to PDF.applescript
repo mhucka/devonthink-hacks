@@ -31,9 +31,9 @@ on performSmartRule(theRecords)
 			delay 0.75
 		end
 
-                # Return to the top. Do it twice because sometimes on some
+		# Return to the top. Do it twice because sometimes on some
 		# pages (notably Twitter), the first attempt gets stuck in
-		# some random location.  (Ugh, what a hack this is.)
+		# some random location.	 (Ugh, what a hack this is.)
 		do JavaScript "window.scrollTo(0,0)" in current tab of theWindow
 		delay 0.5
 		do JavaScript "window.scrollTo(0,0)" in current tab of theWindow
@@ -46,10 +46,16 @@ on performSmartRule(theRecords)
 		set contentAsPDF to get PDF of theWindow
 
 		# The currently-selected item is a bookmark.  We still have to
-		# create a PDF document in DEVONthink.
+		# create a PDF document in DEVONthink. First gather more info:
 		set recordName to (name of selected)
 		set recordURL to (URL of selected) as string
-		set newRecord to create record with {name:recordName, URL:recordURL, type:PDF document} in current group
+		set recordParents to (parents of selected)
+		set recordGroup to item 1 of recordParents
+
+		# Create the new record in the first parent group of the selected
+		# item. (FIXME: arbitrary choice if item is replicated. Should do
+		# something smarter here.)
+		set newRecord to create record with {name:recordName, URL:recordURL, type:PDF document} in recordGroup
 		set data of newRecord to contentAsPDF
 		set creation date of newRecord to creation date of selected
 		set modification date of newRecord to modification date of selected
