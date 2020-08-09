@@ -62,6 +62,11 @@ on performSmartRule(theRecords)
 		set comment of newRecord to comment of selected
 		set label of newRecord to label of selected
 
+        # Add tags.
+		set {od, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ","}
+		set the tags of newRecord to tags of selected
+		set AppleScript's text item delimiters to od
+
 		close theWindow
 	end repeat
 end performSmartRule
