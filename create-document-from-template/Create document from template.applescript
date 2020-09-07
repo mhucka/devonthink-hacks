@@ -9,9 +9,9 @@
 # Configuration variables -- THE FOLLOWING MUST BE UPDATED MANUALLY
 # .............................................................................
 
-set templateNames to {"Code", "Diary", "Goal plan", "Notebook", "Meeting", "Term"}
+set templateNames to {"Code", "Diary", "Goal plan", "Notebook", "Markdown", "Meeting", "Term"}
 set templateFiles to {"Code.md", "Diary.ooutline", "Goal plan.ooutline", ¬
-	"Notebook.ooutline", "Meeting.ooutline", "Term.ooutline"}
+	"Notebook.ooutline", "Markdown.md", "Meeting.ooutline", "Term.ooutline"}
 
 # Main body
 # .............................................................................
