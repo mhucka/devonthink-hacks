@@ -47,13 +47,9 @@ tell application id "DNtp"
 	
 	set prompt to "Name for the new " & chosenTemplate & " document:"
 	set reply to display dialog prompt default answer ""
-	
 	set docName to text returned of reply
 	
-	set systemInfo to system info
-	set userName to short user name of systemInfo
-	
-	set templateDir to "/Users/" & userName ¬
+	set templateDir to "/Users/" & (short user name of (system info)) ¬
 		& "/Library/Application Support/DEVONthink 3/Templates.noindex/"
 	
 	repeat with n from 1 to (count of templateNames)
