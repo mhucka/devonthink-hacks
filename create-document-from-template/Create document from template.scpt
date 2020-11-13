@@ -9,9 +9,10 @@
 # Configuration variables -- THE FOLLOWING MUST BE UPDATED MANUALLY
 # .............................................................................
 
-set templates to {"Code.md", "Brief note.ooutline", "Diary.ooutline", ¬
-	"Goal plan.ooutline", "Notebook.ooutline", "Markdown.md", ¬
-	"Meeting.ooutline", "Plain text.txt", "Term.ooutline"}
+set templates to {"Clipboard to markdown.md", "Code.md", "Diary.ooutline", ¬
+	"Document.ooutline", "Goal plan.ooutline", "Markdown.md", ¬
+	"Meeting.ooutline", "Note.ooutline", "Plain text.txt", ¬
+	"Reading notes.ooutline", "Term.ooutline"}
 
 
 # Helper functions
