@@ -18,11 +18,13 @@ The following image shows the configuration of my Smart Rule in DEVONthink:
 
 Note that the rule removes the tag _before_ creating the PDF, because the PDF file will inherit any tags on the bookmark when DEVONthink creates it, and you don't want the tag on the resulting PDF file.  The rule also moves the original bookmark to the trash because for my purposes, it's no longer needed after the PDF conversion is done.
 
-Finally, the following is the code for the bookmarklet:
+The following is the code for the bookmarklet:
 
 ```
 javascript:window.location='x-devonthink://createBookmark?title='+encodeURIComponent(document.title)+'&location='+encodeURIComponent(window.location)+'&referrer='+encodeURIComponent(document.referrer)+'&tags=convert-to-pdf';
 ```
+
+Incidentally, the AppleScript code copies the DEVONthink item link (of the form `x-devonthink-item://...`) to the macOS clipboard.  This can be handy if the next thing you do after clipping the page is to write something about it and you want to link to the item in DEVONthink.
 
 <!--
 Here is the bookmarklet in a format that you can drag to your web browser's favorites bar:
