@@ -9,10 +9,10 @@
 # Configuration variables -- THE FOLLOWING MUST BE UPDATED MANUALLY
 # .............................................................................
 
-set templates to {"Clipboard to markdown.md", "Code.md", "Diary.ooutline", ¬
-	"Document.ooutline", "Goal plan.ooutline", "Markdown.md", ¬
-	"Meeting.ooutline", "Note.ooutline", "Plain text.txt", ¬
-        "Reading notes.ooutline", "Term.ooutline"}
+set templates to {"Code.md", "Diary.ooutline", "Goal plan.ooutline", ¬
+	"Markdown.md", "Meeting.ooutline", "Notes.ooutline", ¬
+        "Plain text.txt", "Reading notes.ooutline",  ¬
+        "Spreadsheet.numbers", "Term definition.ooutline"}
 
 
 # Helper functions
@@ -59,10 +59,16 @@ tell application id "DNtp"
 		end if
 	end repeat
 	
-	set newRecord to import templatePath to current group
+        set theGroup to current group
+	set newRecord to import templatePath to theGroup
 	set creation date of newRecord to current date
 	set modification date of newRecord to current date
 	set the name of newRecord to docName
+
+        # Save the link to the new document on the clipboard.
+        set the clipboard to (reference URL of theGroup as string)
+
+        # Run a rule for dealing with the way I label things personally.
 	try
 		perform smart rule "auto-label my notes" record newRecord
 	end try
