@@ -65,7 +65,7 @@ tell application id "DNtp"
 	set modification date of newRecord to current date
 	set the name of newRecord to docName
 
-        # Save the link to the new document on the clipboard.
+        # Save the link to the group containing the document on the clipboard.
         set the clipboard to (reference URL of theGroup as string)
 
         # Run a rule for dealing with the way I label things personally.
