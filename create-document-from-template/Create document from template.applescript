@@ -1,9 +1,9 @@
 -- ============================================================================
--- @file	   Create document from template.applescript
+-- @file    Create document from template.applescript
 -- @brief   Script to create a document from a template and name it
 -- @author  Michael Hucka <mhucka@caltech.edu>
 -- @license MIT license -- please see the file LICENSE in the parent directory
--- @repo	   https://github.com/mhucka/devonthink-hacks
+-- @repo    https://github.com/mhucka/devonthink-hacks
 -- ============================================================================
 
 -- Configuration variables -- THE FOLLOWING MUST BE UPDATED MANUALLY.
