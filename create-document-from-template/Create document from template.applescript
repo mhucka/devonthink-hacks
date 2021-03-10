@@ -11,8 +11,8 @@
 
 set templates to {"Code.md", "Diary.ooutline", "Goal plan.ooutline", ¬
 	"Markdown.md", "Meeting.ooutline", "Notes.ooutline", ¬
-        "Plain text.txt", "Reading notes.ooutline",  ¬
-        "Spreadsheet.numbers", "Term definition.ooutline"}
+	"Plain text.txt", "Reading notes.ooutline", ¬
+	"Spreadsheet.numbers", "Term definition.ooutline"}
 
 
 # Helper functions
@@ -56,19 +56,28 @@ tell application id "DNtp"
 	repeat with n from 1 to (count of templateNames)
 		if templates's item n starts with chosenTemplate then
 			set templatePath to (POSIX path of templateDir & templates's item n)
+			set templateFullName to templates's item n
 		end if
 	end repeat
 	
-        set theGroup to current group
+	set theGroup to current group
 	set newRecord to import templatePath to theGroup
 	set creation date of newRecord to current date
 	set modification date of newRecord to current date
 	set the name of newRecord to docName
+	set filePath to the path of the first item of newRecord
+	set recordURL to reference URL of newRecord as string
+	set groupURL to reference URL of theGroup as string
 
-        # Save the link to the group containing the document on the clipboard.
-        set the clipboard to (reference URL of theGroup as string)
-
-        # Run a rule for dealing with the way I label things personally.
+	if templateFullName ends with "ooutline" then
+		do shell script "/usr/local/bin/ottoman -m -r -d '" & filePath ¬
+			& "' description=" & recordURL & " subject=" & groupURL
+	end if
+	
+	# Save the link to the group containing the document on the clipboard.
+	set the clipboard to (reference URL of theGroup as string)
+	
+	# Run a rule for dealing with the way I label things personally.
 	try
 		perform smart rule "auto-label my notes" record newRecord
 	end try
