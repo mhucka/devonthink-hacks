@@ -1,13 +1,13 @@
-# =============================================================================
-# @file	   Create document from template.applescript
-# @brief   Script to create a document from a template and name it
-# @author  Michael Hucka <mhucka@caltech.edu>
-# @license MIT license -- please see the file LICENSE in the parent directory
-# @repo	   https://github.com/mhucka/devonthink-hacks
-# =============================================================================
+-- ============================================================================
+-- @file	   Create document from template.applescript
+-- @brief   Script to create a document from a template and name it
+-- @author  Michael Hucka <mhucka@caltech.edu>
+-- @license MIT license -- please see the file LICENSE in the parent directory
+-- @repo	   https://github.com/mhucka/devonthink-hacks
+-- ============================================================================
 
-# Configuration variables -- THE FOLLOWING MUST BE UPDATED MANUALLY
-# .............................................................................
+-- Configuration variables -- THE FOLLOWING MUST BE UPDATED MANUALLY.
+-- ............................................................................
 
 set templates to {"Code.md", "Diary.ooutline", "Goal plan.ooutline", ¬
 	"Markdown.md", "Meeting.ooutline", "Notes.ooutline", ¬
@@ -15,11 +15,11 @@ set templates to {"Code.md", "Diary.ooutline", "Goal plan.ooutline", ¬
 	"Spreadsheet.numbers", "Term definition.ooutline"}
 
 
-# Helper functions
-# .............................................................................
+-- Helper functions.
+-- ............................................................................
 
-# The following code is based on a function posted by "jobu" on 2004-08-11
-# at https://macscripter.net/viewtopic.php?pid=32191#p32191
+-- The following code is based on a function posted by "jobu" on 2004-08-11
+-- at https://macscripter.net/viewtopic.php?pid=32191--p32191
 
 on withoutExtension(name)
 	if name contains "." then
@@ -34,8 +34,8 @@ on withoutExtension(name)
 end withoutExtension
 
 
-# Main body
-# .............................................................................
+-- Main body.
+-- ............................................................................
 
 tell application id "DNtp"
 	set templateNames to {}
@@ -74,10 +74,10 @@ tell application id "DNtp"
 			& "' description=" & recordURL & " subject=" & groupURL
 	end if
 	
-	# Save the link to the group containing the document on the clipboard.
+	-- Save the link to the group containing the document on the clipboard.
 	set the clipboard to (reference URL of theGroup as string)
 	
-	# Run a rule for dealing with the way I label things personally.
+	-- Run a rule for dealing with the way I label things personally.
 	try
 		perform smart rule "auto-label my notes" record newRecord
 	end try
