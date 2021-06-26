@@ -10,12 +10,12 @@
 # 2016-06-26 at https://stackoverflow.com/a/38042023/743730
 
 on substituted(search_string, replacement_string, this_text)
- set AppleScript's text item delimiters to the search_string
- set the item_list to every text item of this_text
- set AppleScript's text item delimiters to the replacement_string
- set this_text to the item_list as string
- set AppleScript's text item delimiters to ""
- return this_text
+	set AppleScript's text item delimiters to the search_string
+	set the item_list to every text item of this_text
+	set AppleScript's text item delimiters to the replacement_string
+	set this_text to the item_list as string
+	set AppleScript's text item delimiters to ""
+	return this_text
 end substituted
 
 on performSmartRule(selectedRecords)
