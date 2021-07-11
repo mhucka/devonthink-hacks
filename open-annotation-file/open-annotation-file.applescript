@@ -15,9 +15,7 @@ tell application id "DNtp"
 				open window for record annotRecord with force
 			else
 				set rec_name to get name of theRecord
-				display alert ¬
-					"DEVONthink" message "Document has no annotation:\n\n" ¬
-						& rec_name
+				display alert "Document has no annotation" message rec_name
 			end if
 		end repeat
 	on error error_message number error_number
