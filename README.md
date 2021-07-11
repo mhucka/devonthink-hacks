@@ -2,7 +2,7 @@
 
 These are scripts and programs I developed to work with [DEVONthink](https://www.devontechnologies.com/apps/devonthink), a powerful personal database and information management system.
 
-[![License](https://img.shields.io/badge/MIT-purple.svg?style=flat-square)](https://choosealicense.com/licenses/mit)
+[![License](https://img.shields.io/badge/MIT-purple.svg?style=flat-square)](https://github.com/mhucka/devonthink-hacks/LICENSE.html)
 [![DEVONthink&nbsp;3](https://img.shields.io/badge/DEVONthink%203-blue.svg?style=flat-square)](https://www.devontechnologies.com/apps/devonthink)
 [![AppleScript](https://img.shields.io/badge/AppleScript-green.svg?style=flat-square)](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
 
