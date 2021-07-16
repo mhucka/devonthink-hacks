@@ -17,6 +17,9 @@
 -- a full-page PDF snapshot of the page. Beware that it takes 10+ seconds to
 -- finish (possibly longer, depending on the web page contents).
 -- 
+-- This adds a tag, "archived-page", to the resulting PDF document, so that
+-- it's easier to find the documents created by this process.
+--
 -- As the last thing it does, the script copies the new DEVONthink document's
 -- item link to the clipboard.
 
@@ -75,7 +78,7 @@ on performSmartRule(theRecords)
 		
 		-- Add tags.
 		set {od, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ","}
-		set the tags of newRecord to tags of selected
+		set the tags of newRecord to (tags of selected & "archived-page")
 		set AppleScript's text item delimiters to od
 		
 		-- Write the item link to the clipboard.
