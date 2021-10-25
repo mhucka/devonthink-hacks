@@ -39,7 +39,7 @@ on performSmartRule(selectedRecords)
 		# AppleScript "quoted form of" below, seems to do the trick.
 		set AppleScript's text item delimiters to "\\\\"
 		set result to do shell script ¬
-			"/usr/local/bin/zowie -q " & (quoted form of sanitized_path)
+			"/usr/local/bin/zowie -s -q " & (quoted form of sanitized_path)
 
 		# Display a DEVONthink notification if an error occurred.
 		if result is not equal to "" then
