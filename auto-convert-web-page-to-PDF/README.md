@@ -7,8 +7,9 @@ However, I'm not always browsing the web from within DEVONthink, and if I want t
 
 In general, capturing dynamically-generated pages is a hopelessly difficult task.  However, for my purposes, I've solved this for most cases using a combination of mechanisms:
 
-1. A Smart Rule in DEVONthink that is triggered when a new web page bookmark is created if the bookmark contains a certain tag; this Smart Rule then runs an AppleScript program to open the page, scroll down in it, and convert the resulting window contents to PDF.
-2. A custom bookmarklet that can be used from Safari that, when invoked, sends a URL to DEVONthink with the required tag.
+1. A Smart Rule in DEVONthink that is triggered when a new web page bookmark is created if the bookmark contains a certain tag;
+2. An AppleScript program that is executed by the Smart Rule; it opens the page, scrolls down the page a few times, and tells DEVONthink to convert the resulting window content to PDF.
+3. A custom bookmarklet that can be used from Safari that, when invoked, sends a URL to DEVONthink with the required tag.
 
 The following image shows the configuration of my Smart Rule in DEVONthink:
 
