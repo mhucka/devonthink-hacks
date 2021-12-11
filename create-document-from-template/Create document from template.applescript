@@ -102,11 +102,8 @@ try
 		set docUUID to uuid of newRecord
 		set docRevealURL to recordURL & "?reveal=1"
 		set docFileName to filename of newRecord
-	
-		if templateFullName ends with "ooutline" then
-			do shell script "/usr/local/bin/ottoman -m -r -i '" & filePath ¬
-				& "' description=" & recordURL & " subject=" & groupURL
-		else if templateFullName ends with "md" then
+
+		if templateFullName ends with "md" then
 			set body to plain text of newRecord
 			set body to my replace(body, "%UUID%", docUUID)
 			set body to my replace(body, "%fileName%", docFileName)
