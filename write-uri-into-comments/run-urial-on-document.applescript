@@ -12,11 +12,17 @@
 
 on performSmartRule(selectedRecords)
 	tell application id "DNtp"
+		-- A just-created record may be still getting modified by things
+		-- like smart rules. Wait a short time in case those rules change
+		-- the file name.
+		delay 1
 		try
 			repeat with _record in selectedRecords
-				set file_path to the path of the _record
+				-- I don't understand why this next value has to be
+				-- "path of the first item of _record" instead of
+				-- just "path of _record", but that's what it needs.
+				set file_path to the path of the first item of _record
 				set uri to reference URL of the _record as string
-		
 				-- A problem with file names is embedded single quotes.
 				-- The combo of changing the text delimiter and using
 				-- the AS "quoted form of" below, seems to do the trick.
