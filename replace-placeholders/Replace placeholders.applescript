@@ -8,22 +8,10 @@
 -- This is an AppleScript fragment that will only work as the script
 -- executed by a Smart Rule in DEVONthink. For more information, see
 -- https://github.com/mhucka/devonthink-hacks/replace-placeholders
---
--- This is intended to be used on a condition that triggers after a
--- new document is created.  Certain features may not work or be ideal
--- in other situations.  For example, the delay near the top of the
--- script may not be helpful in other cases.
 -- ======================================================================
 
 on performSmartRule(selectedRecords)
 	tell application id "DNtp"
-		-- When creating new documents from templates, DEVONthink gives
-		-- them a default name, and the user has to edit the name.  That
-		-- means if this script triggers immediately, it will run before
-		-- the user has a chance to name the document.  To work around
-		-- that, delay the execution a short time:
-		delay 5
-
 		try
 			repeat with theRecord in selectedRecords
 				set t to (type of theRecord) as string
@@ -31,11 +19,13 @@ on performSmartRule(selectedRecords)
 					set docName to name of theRecord
 					set docUUID to uuid of theRecord
 					set docURL to reference URL of theRecord as string
+					set docFileName to filename of theRecord
 					set theGroup to current group
 					set groupURL to reference URL of theGroup as string
 
 					set body to plain text of theRecord
 					set body to my replace(body, "%UUID%", docUUID)
+					set body to my replace(body, "%fileName%", docFileName)
 					set body to my replace(body, "%groupURL%", groupURL)
 					set body to my replace(body, "%documentURL%", docURL)
 					set body to my replace(body, "%documentName%", docName)
