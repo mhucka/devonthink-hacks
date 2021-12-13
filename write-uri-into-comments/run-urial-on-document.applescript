@@ -13,9 +13,8 @@
 on performSmartRule(selectedRecords)
 	tell application id "DNtp"
 		-- A just-created record may be still getting modified by things
-		-- like smart rules. Wait a short time in case those rules change
-		-- the file name.
-		delay 1
+		-- like smart rules or the user changing the name. Wait a bit.
+		delay 10
 		try
 			repeat with _record in selectedRecords
 				-- I don't understand why this next value has to be
