@@ -17,14 +17,22 @@ on performSmartRule(selectedRecords)
 		delay 10
 		try
 			repeat with _record in selectedRecords
+				set uri to reference URL of the _record as string
+
 				-- I don't understand why this next value has to be
 				-- "path of the first item of _record" instead of
 				-- just "path of _record", but that's what it needs.
 				set file_path to the path of the first item of _record
-				set uri to reference URL of the _record as string
-				-- A problem with file names is embedded single quotes.
-				-- The combo of changing the text delimiter and using
-				-- the AS "quoted form of" below, seems to do the trick.
+
+				-- Some chars in file names are problematic due to having
+				-- special meaning to the shell. Need to quote them, but
+				-- here, need to use 2 blackslashes, b/c the 1st backslash
+				-- will be removed when the string is handed to the shell.
+		        set file_path to my substituted("&", "\\\\&", file_path)
+
+				-- Aother problem for shell strings is embedded single
+				-- quotes. Combo of changing the text delimiter & using
+				-- the AS "quoted form of" below seems to do the trick.
 				set AppleScript's text item delimiters to "\\\\"
 				set result to do shell script ¬
 					"/Users/mhucka/.local/bin/urial -m append -G " ¬
@@ -42,3 +50,12 @@ on performSmartRule(selectedRecords)
 		end try
 	end tell
 end performSmartRule
+
+on substituted(search_string, replacement_string, this_text)
+	set AppleScript's text item delimiters to the search_string
+	set the item_list to every text item of this_text
+	set AppleScript's text item delimiters to the replacement_string
+	set this_text to the item_list as string
+	set AppleScript's text item delimiters to ""
+	return this_text
+end substituted
