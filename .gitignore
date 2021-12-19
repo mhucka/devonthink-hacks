@@ -60,3 +60,5 @@ TAGS
 
 build
 dist
+write-uri-into-comments/*.scpt
+zowie-scripts/*.scpt
