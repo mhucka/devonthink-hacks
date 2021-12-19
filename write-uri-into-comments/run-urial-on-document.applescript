@@ -12,17 +12,10 @@
 
 on performSmartRule(selectedRecords)
 	tell application id "DNtp"
-		-- A just-created record may be still getting modified by things
-		-- like smart rules or the user changing the name. Wait a bit.
-		delay 10
 		try
 			repeat with _record in selectedRecords
 				set uri to reference URL of the _record as string
-
-				-- I don't understand why this next value has to be
-				-- "path of the first item of _record" instead of
-				-- just "path of _record", but that's what it needs.
-				set file_path to the path of the first item of _record
+				set file_path to the path of _record
 
 				-- Some chars in file names are problematic due to having
 				-- special meaning to the shell. Need to quote them, but
