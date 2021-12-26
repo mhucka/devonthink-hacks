@@ -23,22 +23,22 @@ on performSmartRule(selectedRecords)
 				-- will be removed when the string is handed to the shell.
 		        set file_path to my substituted("&", "\\\\&", file_path)
 
-				-- Aother problem for shell strings is embedded single
+				-- Another problem for shell strings is embedded single
 				-- quotes. Combo of changing the text delimiter & using
 				-- the AS "quoted form of" below seems to do the trick.
 				set AppleScript's text item delimiters to "\\\\"
 				set result to do shell script ¬
-					"/Users/mhucka/.local/bin/urial -m append -G " ¬
+					"/Users/mhucka/.local/bin/urial -m append -U " ¬
 					& uri & " " & (quoted form of file_path)
 		
 				-- Display a notification if urial returned a msg.
 				if result is not equal to "" then
-					display notification result
+					display alert "Urial" message result as warning
 				end if
 			end repeat
-		on error _msg number _code
-			if the _code is not -128 then
-				display alert "DEVONthink" message _msg as warning
+		on error msg number code
+			if the code is not -128 then
+				display alert "DEVONthink" message msg as warning
 			end if
 		end try
 	end tell
