@@ -13,5 +13,3 @@ The rule's conditions match files that do not contain an `x-devonthink-item` URI
 The need for both actions is due to how DEVONthink behaves (at least up to version 3.8). When you modify the metadata field called "Finder Comments" in the DEVONthink user interface, it [does not actually write the field value to the macOS file](https://discourse.devontechnologies.com/t/how-can-i-make-finder-comments-added-in-dt-show-up-in-finder-get-info-box/68186) at that point. In fact, it never writes the metadata to the file properties unless you export the file. Thus, merely updating the comment in DEVONthink is not enough to make it visible outside of DEVONthink, and an additional action is needed.
 
 I wrote [Urial](https://github.com/mhucka/urial) to help with this task. The program intelligently updates URIs in Finder comments rather than blindly replacing the comment text.
-
-If you don't want to use Urial, you could accomplish most (or all, if you're really motivated) of the same thing by writing some AppleScript or JavaScript code.
