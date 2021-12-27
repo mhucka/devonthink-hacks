@@ -30,7 +30,7 @@ on performSmartRule(selectedRecords)
 				set fp to quoted form of file_path
 
 				set result to do shell script ¬
-					"PATH=$PATH:/usr/local/bin:$HOME/.local/bin urial" ¬
+					"PATH=$PATH:$HOME/.local/bin:/usr/local/bin urial" ¬
 					& " -m append -U " & uri & " " & fp
 		
 				-- Display a notification if urial returned a msg.
