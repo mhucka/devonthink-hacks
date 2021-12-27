@@ -21,7 +21,7 @@ on performSmartRule(selectedRecords)
 				-- special meaning to the shell. Need to quote them, but
 				-- here, need to use 2 blackslashes, b/c the 1st backslash
 				-- will be removed when the string is handed to the shell.
-		        set file_path to my substituted("&", "\\\\&", file_path)
+				set file_path to my substituted("&", "\\\\&", file_path)
 
 				-- Another problem for shell strings is embedded single
 				-- quotes. Combo of changing the text delimiter & using
