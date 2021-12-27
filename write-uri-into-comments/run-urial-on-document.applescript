@@ -46,6 +46,9 @@ on performSmartRule(selectedRecords)
 	end tell
 end performSmartRule
 
+-- The following function is based on code posted by user "mb21" on
+-- 2016-06-26 at https://stackoverflow.com/a/38042023/743730
+
 on substituted(search_string, replacement_string, this_text)
 	set AppleScript's text item delimiters to the search_string
 	set the item_list to every text item of this_text
