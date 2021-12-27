@@ -27,9 +27,11 @@ on performSmartRule(selectedRecords)
 				-- quotes. Combo of changing the text delimiter & using
 				-- the AS "quoted form of" below seems to do the trick.
 				set AppleScript's text item delimiters to "\\\\"
+				set fp to quoted form of file_path
+
 				set result to do shell script ¬
-					"/Users/mhucka/.local/bin/urial -m append -U " ¬
-					& uri & " " & (quoted form of file_path)
+					"PATH=$PATH:/usr/local/bin:$HOME/.local/bin urial" ¬
+					& " -m append -U " & uri & " " & fp
 		
 				-- Display a notification if urial returned a msg.
 				if result is not equal to "" then
