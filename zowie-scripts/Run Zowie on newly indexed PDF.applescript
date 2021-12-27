@@ -4,6 +4,10 @@
 -- @author	Michael Hucka <mhucka@caltech.edu>
 -- @license MIT license; please see the file LICENSE in the repo
 -- @repo	https://github.com/mhucka/devonthink-hacks
+--
+-- This is an AppleScript fragment that will only work as the script
+-- executed by a Smart Rule in DEVONthink. For more information, see
+-- https://github.com/mhucka/devonthink-hacks/zowie-scripts
 -- ======================================================================
 
 on performSmartRule(selectedRecords)
