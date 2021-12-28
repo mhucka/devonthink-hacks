@@ -31,7 +31,7 @@ on performSmartRule(selectedRecords)
 
 				set result to do shell script ¬
 					"PATH=$PATH:$HOME/.local/bin:/usr/local/bin urial" ¬
-					& " -m append -U " & uri & " " & fp
+					& " -m update -U " & uri & " " & fp
 		
 				-- Display a notification if urial returned a msg.
 				if result is not equal to "" then
