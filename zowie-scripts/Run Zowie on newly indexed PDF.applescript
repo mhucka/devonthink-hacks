@@ -36,11 +36,11 @@ on performSmartRule(selectedRecords)
 				set quoted_file_path to quoted form of file_path
 		
 				set result to do shell script ¬
-					"PATH=$PATH:$HOME/.local/bin:/usr/local/bin zowie" ¬
-					& " -s -q " & quoted_file_path
+					"PATH=$PATH:$HOME/.local/bin:/usr/local/bin" ¬
+					& " zowie -s -q " & quoted_file_path
 		
 				-- Display a notification if zowie returned a msg.
-				if result is not equal to "" then
+				if result ≠ "" then
 					display notification result
 				end if
 			end repeat
