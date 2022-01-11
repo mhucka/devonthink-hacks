@@ -51,11 +51,11 @@ on performSmartRule(selectedRecords)
 					-- already been indexed.
 					set comment of _record to my finderComment(raw_path)
 
-					-- If all went well, force execution of smart rules
-					-- with "on import" triggers. This is needed because
-					-- some of my rules use the URL in the Finder comment,
-					-- but DEVONthink smart rules won't trigger when the
-					-- only change to a file is to the Finder comment.
+					-- Also force execution of smart rules with "on import"
+					-- triggers. This is needed because some of my rules use
+					-- the URL in the Finder comment, but DEVONthink smart
+					-- rules won't trigger when the only change to a file is
+					-- to the Finder comment.
 					perform smart rule record _record trigger import event
 				end if
 			end repeat
