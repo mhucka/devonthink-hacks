@@ -23,17 +23,11 @@ on performSmartRule(selectedRecords)
 			repeat with _record in selectedRecords
 				set raw_path to the path of _record
 		
-				-- Some chars in file names are problematic due to having
-				-- special meaning to the shell. Need to quote them, but
-				-- here, need to use 2 blackslashes, b/c the 1st backslash
-				-- will be removed when the string is handed to the shell.
-				set file_path to my substituted("&", "\\\\&", raw_path)
-		
-				-- Another problem for shell strings is embedded single
-				-- quotes. Combo of changing the text delimiter & using
-				-- the AS "quoted form of" below seems to do the trick.
+				-- A problem for shell strings is embedded single quotes.
+				-- Combo of changing text delimiters & using AppleScript
+				-- "quoted form of" seems to do the trick.
 				set AppleScript's text item delimiters to "\\\\"
-				set quoted_file_path to quoted form of file_path
+				set quoted_file_path to quoted form of raw_path
 		
 				-- Now run Zowie. The PATH setting adds common locations
 				-- where Zowie may be installed on the user's computer.
