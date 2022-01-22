@@ -6,7 +6,7 @@
   "codeRepository": "https://github.com/mhucka/devonthink-hacks",
   "issueTracker": "https://github.com/mhucka/devonthink-hacks/issues",
   "license": "https://github.com/mhucka/devonthink-hacks/blob/master/LICENSE",
-  "version": "0.5.0",
+  "version": "unversioned",
   "author": [
     {
       "@type": "Person",
