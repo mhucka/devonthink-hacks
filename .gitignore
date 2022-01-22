@@ -62,3 +62,4 @@ build
 dist
 write-uri-into-comments/*.scpt
 zowie-scripts/*.scpt
+set-icon-to-parent-icon/*.scpt
