@@ -1,0 +1,23 @@
+# YAML 1.2
+---
+authors: 
+  -
+    affiliation: "Caltech Library"
+    given-names: Mike
+    family-names: Hucka
+    orcid: "0000-0001-9105-5960"
+cff-version: "1.1.0"
+message: "If you use this software, please cite it using these metadata."
+repository-code: "https://github.com/caltechlibrary/foliage"
+title: "Mike's DEVONthink Hacks"
+date-released: 2022-01-22
+version: "unversioned"
+keywords: 
+  - DEVONthink
+  - macOS
+  - automation
+  - scripting
+  - AppleScript
+  - archiving
+  - PDF
+...
