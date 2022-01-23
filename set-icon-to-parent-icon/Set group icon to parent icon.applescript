@@ -15,20 +15,15 @@ tell application id "DNtp"
 	try
 		repeat with rec in (selected records)
 			set recType to (type of rec) as string
-			if recType is not in {"group", "«constant ****DTgr»"} then
-			   display notification "Selected item is not a group"
-			   return
+			if recType is in {"group", "«constant ****DTgr»"} then
+				set locGroup to location group of rec
+				-- Note: *must* set directly; can't use intermediate var.
+				set thumbnail of rec to thumbnail of locGroup
+			else
+				set recName to name of rec
+				display notification ¬
+					"Ignoring item because it's not a group: " & recName
 			end if
-		
-			-- Items can have multiple parents.  Look for the first one
-			-- that is a group, and use it.
-			repeat with parentRec in (parent of rec)
-				if recType is in {"group", "«constant ****DTgr»"} then
-					-- Important: *must* set directly, not using variable.
-					set thumbnail of rec to thumbnail of parentRec
-					return
-				end if
-			end repeat
 		end repeat
 	on error msg number err
 		if err is not -128 then ¬
