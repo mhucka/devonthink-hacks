@@ -5,7 +5,7 @@
 -- @license MIT license; please see the file LICENSE in the repo
 -- @repo	https://github.com/mhucka/devonthink-hacks
 --
--- This script only acts on groups.
+-- This script only acts on groups and smart groups.
 -- ======================================================================
 
 use AppleScript version "2.4" -- Yosemite (10.10) or later
@@ -15,7 +15,7 @@ tell application id "DNtp"
 	try
 		repeat with rec in (selected records)
 			set recType to (type of rec) as string
-			if recType is in {"group", "«constant ****DTgr»"} then
+			if recType is in {"group", "smart group"} then
 				set locGroup to location group of rec
 				-- Note: *must* set directly; can't use intermediate var.
 				set thumbnail of rec to thumbnail of locGroup
