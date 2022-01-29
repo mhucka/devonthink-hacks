@@ -27,30 +27,22 @@ on performSmartRule(selectedRecords)
 				-- Combo of changing text delimiters & using AppleScript
 				-- "quoted form of" seems to do the trick.
 				set AppleScript's text item delimiters to "\\\\"
-				set quoted_file_path to quoted form of raw_path
+				set quoted_path to quoted form of raw_path
 		
 				-- Now run Zowie. The PATH setting adds common locations
 				-- where Zowie may be installed on the user's computer.
 				set result to do shell script ¬
 					"PATH=$PATH:$HOME/.local/bin:/usr/local/bin" ¬
-					& " zowie -s -q " & quoted_file_path
+					& " zowie -s -q " & quoted_path
 		
-				-- Display a notification if Zowie returned a msg.
+				-- If Zowie returned a msg, something went wrong.
 				if result ≠ "" then
 					display notification result
 				else
-					-- If all went well, tell DEVONthink explicitly to set
-					-- the comment, because it does not consistently
-					-- "notice" the addition of a comment after a file has
-					-- already been indexed.
+					-- Finish by telling DT explicitly to set the comment,
+					-- because it doesn't consistently "notice" addition
+					-- of a comment after a file has already been indexed.
 					set comment of _record to my finderComment(raw_path)
-
-					-- Also force execution of smart rules with "on import"
-					-- triggers. This is needed because some of my rules use
-					-- the URL in the Finder comment, but DEVONthink smart
-					-- rules won't trigger when the only change to a file is
-					-- to the Finder comment.
-					perform smart rule record _record trigger import event
 				end if
 			end repeat
 		on error msg number code
