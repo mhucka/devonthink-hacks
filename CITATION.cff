@@ -10,7 +10,7 @@ cff-version: "1.1.0"
 message: "If you use this software, please cite it using these metadata."
 repository-code: "https://github.com/caltechlibrary/foliage"
 title: "Mike's DEVONthink Hacks"
-date-released: 2022-01-22
+date-released: 2022
 version: "unversioned"
 keywords: 
   - DEVONthink
