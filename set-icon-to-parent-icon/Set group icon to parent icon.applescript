@@ -8,21 +8,24 @@
 -- This script only acts on groups and smart groups.
 -- ======================================================================
 
-use AppleScript version "2.4" -- Yosemite (10.10) or later
-use scripting additions
+property scriptName : "Set group icon to parent icon"
 
 tell application id "DNtp"
 	try
 		repeat with rec in (selected records)
 			set recType to (type of rec) as string
-			if recType is in {"group", "smart group"} then
+			if recType is in {"group", "«constant ****DTgr»", ¬
+							  "smart group", "«constant ****DTsg»"} then
 				set locGroup to location group of rec
 				-- Note: *must* set directly; can't use intermediate var.
 				set thumbnail of rec to thumbnail of locGroup
 			else
 				set recName to name of rec
-				display notification ¬
-					"Ignoring item because it's not a group: " & recName
+				-- Don't use display alert here in case the user selected
+				-- a lot of items. Just log failures instead.
+				log message "[" & scriptName & "] " & ¬
+					"Icon not changed because item is not a group: " ¬
+					& recName
 			end if
 		end repeat
 	on error msg number err
