@@ -1,9 +1,9 @@
 -- ======================================================================
--- @file	Check that Zotero is running and start it if it is not
--- @brief	Script for DEVONthink smart rule
--- @author	Michael Hucka <mhucka@caltech.edu>
+-- @file    Check that Zotero is running and start it if it is not
+-- @brief   Script for DEVONthink smart rule
+-- @author  Michael Hucka <mhucka@caltech.edu>
 -- @license MIT license; please see the file LICENSE in the repo
--- @repo	https://github.com/mhucka/devonthink-hacks
+-- @repo    https://github.com/mhucka/devonthink-hacks
 --
 -- This is an AppleScript fragment that will only work as the script
 -- executed by a Smart Rule in DEVONthink.

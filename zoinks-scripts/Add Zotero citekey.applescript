@@ -1,9 +1,9 @@
 -- ======================================================================
--- @file	Add citekey for Zotero record.applescript
--- @brief	Script for DEVONthink smart rule to run Zoinks on new additions
--- @author	Michael Hucka <mhucka@caltech.edu>
+-- @file    Add citekey for Zotero record.applescript
+-- @brief   Script for DEVONthink smart rule to run Zoinks on new additions
+-- @author  Michael Hucka <mhucka@caltech.edu>
 -- @license MIT license; please see the file LICENSE in the repo
--- @repo	https://github.com/mhucka/devonthink-hacks
+-- @repo    https://github.com/mhucka/devonthink-hacks
 --
 -- This is an AppleScript fragment that will only work as the script
 -- executed by a Smart Rule in DEVONthink. It runs Zoinks to get the
