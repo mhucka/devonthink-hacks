@@ -65,3 +65,5 @@ zowie-scripts/*.scpt
 set-icon-to-parent-icon/*.scpt
 unset-url/*.scpt
 unset-finder-comment/*.scpt
+zoinks-scripts/*.scpt
+create-document-from-template/*.scpt
