@@ -1,9 +1,9 @@
 -- ======================================================================
--- @file	Run Zowie on newly indexed PDF.applescript
--- @brief	Script for DEVONthink smart rule to run Zowie on new additions
--- @author	Michael Hucka <mhucka@caltech.edu>
+-- @file    Run Zowie on newly indexed PDF.applescript
+-- @brief   Script for DEVONthink smart rule to run Zowie on new additions
+-- @author  Michael Hucka <mhucka@caltech.edu>
 -- @license MIT license; please see the file LICENSE in the repo
--- @repo	https://github.com/mhucka/devonthink-hacks
+-- @repo    https://github.com/mhucka/devonthink-hacks
 --
 -- This is an AppleScript fragment that will only work as the script
 -- executed by a Smart Rule in DEVONthink. For more information, see
@@ -22,19 +22,19 @@ on performSmartRule(selectedRecords)
 		try
 			repeat with _record in selectedRecords
 				set raw_path to the path of _record
-		
+
 				-- A problem for shell strings is embedded single quotes.
 				-- Combo of changing text delimiters & using AppleScript
 				-- "quoted form of" seems to do the trick.
 				set AppleScript's text item delimiters to "\\\\"
 				set quoted_path to quoted form of raw_path
-		
+
 				-- Now run Zowie. The PATH setting adds common locations
 				-- where Zowie may be installed on the user's computer.
 				set result to do shell script ¬
 					"PATH=$PATH:$HOME/.local/bin:/usr/local/bin" ¬
 					& " zowie -s -q " & quoted_path
-		
+
 				-- If Zowie returned a msg, something went wrong.
 				if result ≠ "" then
 					display notification result
