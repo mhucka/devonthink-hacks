@@ -1,27 +1,26 @@
--- ============================================================================
+-- ======================================================================
 -- @file    Auto convert web page to PDF.applescript
 -- @brief   Script for DEVONthink to convert a webpage bookmark to PDF
 -- @author  Michael Hucka <mhucka@caltech.edu>
--- @license MIT license -- please see the file LICENSE in the parent directory
+-- @license MIT license; please see the file LICENSE in the repo
 -- @repo    https://github.com/mhucka/devonthink-hacks
 --
--- This script is designed to work with a specific browser bookmarklet that
--- invokes the "createBookmark" facility of DEVONthink and passes some argument
--- values to the bookmark that DEVONthink creates.  For more info, see
+-- This is an AppleScript fragment that will only work as the script
+-- executed by a Smart Rule in DEVONthink. For more information, see
 -- https://github.com/mhucka/devonthink-hacks/auto-convert-web-page-to-PDF/
--- ============================================================================
+-- ======================================================================
 
--- The bookmarklet can be used on regular web pages as well as pages that are
--- open on PDF files.  In the case of regular web pages, this script uses
--- heuristics to try to force page content to be loaded fully before creating
--- a full-page PDF snapshot of the page. Beware that it takes 10+ seconds to
--- finish (possibly longer, depending on the web page contents).
--- 
--- This adds a tag, "archived-page", to the resulting PDF document, so that
--- it's easier to find the documents created by this process.
---
--- As the last thing it does, the script copies the new DEVONthink document's
--- item link to the clipboard.
+-- This script will add a tag to the PDF document it creates. Set the
+-- next property value to the tag name that you want it to use.
+
+property tagForPDF : "π-archived-web-page"
+
+-- The companion bookmarklet can be used on regular web pages as well
+-- as pages that are open on PDF files.  In the case of web pages, this
+-- script uses heuristics to try to force page content to be loaded
+-- fully before creating a full-page PDF snapshot of the page using the
+-- PDF conversion facilityin DEVONthink. Beware that this takes 10+
+-- seconds to finish (possibly longer, depending on page contents).
 
 on performSmartRule(theRecords)
 	repeat with selected in theRecords
@@ -39,51 +38,54 @@ on performSmartRule(theRecords)
 			-- Some pages load content dynamically, with elements not
 			-- displayed until they come into view. This is a hopeless
 			-- situation in general but the following heuristic improves
-			-- outcomes for some cases. We scroll the window by quarters
-			-- to try to trigger loading of more page elements.
+			-- outcomes for some cases. It scrolls the window by
+			-- quarters to try to trigger loading of more page elements.
 			repeat with n from 1 to 4
-				set scroll to "window.scrollTo(0," & n & "*document.body.scrollHeight/4)"
+				set scroll to "window.scrollTo(0," & n ¬
+				    & "*document.body.scrollHeight/4)"
 				do JavaScript scroll in current tab of recordWindow
 				delay 0.75
 			end repeat
 			
 			-- Return to the top. Do it twice because sometimes on some
 			-- pages (notably Twitter), the first attempt gets stuck in
-			-- some random location.	 (Ugh, what a hack this is.)
-			do JavaScript "window.scrollTo(0,0)" in current tab of recordWindow
+			-- some random location. (Ugh, what an utter hack this is.)
+			do JavaScript "window.scrollTo(0,0)" ¬
+			    in current tab of recordWindow
 			delay 0.5
-			do JavaScript "window.scrollTo(0,0)" in current tab of recordWindow
+			do JavaScript "window.scrollTo(0,0)" ¬
+			    in current tab of recordWindow
 			delay 0.25
 		end if
 		
-		-- Get the content of this current viewer window, in PDF form.
-		-- Doing it this way instead of using DEVONthink's "convert record
-		-- to single page PDF document" is critical to getting the version 
-		-- of the page that is produced with the user's login/session state.
+		-- Get the content of our current viewer window, in PDF form.
+		-- This approach instead of using DEVONthink's "convert record
+		-- to single page PDF document" is critical to getting the
+		-- version of the page that is produced with the user's
+		-- login/session state.
 		set contentAsPDF to get PDF of recordWindow
 		
 		set recordName to (name of selected)
 		set recordParents to (parents of selected)
 		set recordGroup to item 1 of recordParents
 		
-		-- Create the new record in the first parent group of the selected
-		-- item. (FIXME: that's an arbitrary choice of groups if item is 
+		-- Create the new record in the 1st parent group of the selected
+		-- item. (FIXME: that's an arbitrary choice of groups if item is
 		-- replicated. Should do something smarter here.)
-		set newRecord to create record with {name:recordName, URL:recordURL, type:PDF document} in recordGroup
-		set data of newRecord to contentAsPDF
-		set creation date of newRecord to creation date of selected
-		set modification date of newRecord to modification date of selected
-		set comment of newRecord to comment of selected
-		set label of newRecord to label of selected
+		set newDoc to create record with ¬
+		    {name:recordName, URL:recordURL, type:PDF document} ¬
+			in recordGroup
+		set data of newDoc to contentAsPDF
+		set creation date of newDoc to creation date of selected
+		set modification date of newDoc to modification date of selected
+		set comment of newDoc to comment of selected
+		set label of newDoc to label of selected
 		
-		-- Add tags.
-		set {od, AppleScript's text item delimiters} to {AppleScript's text item delimiters, ","}
-		set the tags of newRecord to (tags of selected & "archived-page")
+		-- Copy the tags of the original document and add tagForPDF.
+		set {od, AppleScript's text item delimiters} ¬
+		    to {AppleScript's text item delimiters, ","}
+ 		set the tags of newDoc to (tags of selected & tagForPDF)
 		set AppleScript's text item delimiters to od
-		
-		-- Write the item link to the clipboard.
-		set recordLink to get the reference URL of newRecord
-		set the clipboard to recordLink
 
 		close recordWindow
 	end repeat
