@@ -1,59 +1,41 @@
-# -*- mode: sh-mode; -*-
+# =========================================================== -*- gitignore -*-
+# @file    .gitignore
+# @brief   Files and patterns for files and subdirs that git should ignore
+# @date    2022-07-15
+# @license Please see the file named LICENSE in the project directory
+# @website https://github.com/mhucka/devonthink-hacks
+#
+# Rules that apply to one's way of doing things (and the particular tools you
+# happen to use) are best put in a global git ignore file. See
+# "Configuring ignored files for all repositories on your computer" here:
+# https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+# (accessed on 2022-07-14). For example, Emacs checkpoint and backup files are
+# things that are not specific to a given project; rather, Emacs users will
+# see them created everywhere, in all projects, because they're a byproduct
+# of using Emacs, not a consequence of working on a particular project. Thus,
+# they belong in a user's global ignores list, not in this project .gitignore.
+#
+# A useful starting point for global .gitignore file contents can be found at
+# https://github.com/github/gitignore/tree/main/Global (as of 2022-07-14).
+# =============================================================================
 
-# Compiled source
+# AppleScript-specific things to ignore
 # .............................................................................
 
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
+*.scpt
 
-# Compressed archives & package files
+
+# Python-specific things to ignore
 # .............................................................................
 
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.pytest_cache
+.coverage
 
-# OS-specific things to ignore:
-# .............................................................................
-
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Emacs-specific things to ignore:
-# .............................................................................
-
-*~
-.#*
-.git/COMMIT_EDITMSG
-auto
-*.synctex.gz
-TAGS
-
-# LaTeX-specific things to ignore:
-# .............................................................................
-
-*.aux
-*.log
-*.bbl
-*.blg
-*.out
-*.toc
-*.loc
-*.mp
 
 # Project-specific things to ignore:
 # .............................................................................
