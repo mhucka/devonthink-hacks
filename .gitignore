@@ -67,3 +67,4 @@ unset-url/*.scpt
 unset-finder-comment/*.scpt
 zoinks-scripts/*.scpt
 create-document-from-template/*.scpt
+switch-workspace/*.scpt
