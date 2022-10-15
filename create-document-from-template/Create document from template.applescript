@@ -12,13 +12,12 @@
 set templates to { ¬
 	"Code.md", ¬
 	"Diary.ooutline", ¬
-	"External markdown.md", ¬
+	"Empty markdown.md", ¬
 	"Goal plan.ooutline", ¬
 	"Markdown.md", ¬
 	"Meeting.ooutline", ¬
 	"Notes.ooutline", ¬
-	"Plain text.txt", ¬
-	"Reading notes.ooutline", ¬
+	"Records markdown.md", ¬
 	"Spreadsheet.numbers", ¬
 	"Term definition.md" ¬
 }
@@ -78,8 +77,8 @@ try
 		   error number -128
 		end if
 		
-		set templateDir to "/Users/" & (short user name of (system info)) ¬
-			& "/Library/Application Support/DEVONthink 3/Templates.noindex/"
+		set supportDir to path to application support from user domain as text
+		set templateDir to POSIX path of (supportDir & "DEVONthink 3:Templates.noindex:")
 		
 		repeat with n from 1 to (count of templateNames)
 			if templates's item n starts with chosenTemplate then
@@ -102,7 +101,7 @@ try
 		set docUUID to uuid of newRecord
 		set docRevealURL to recordURL & "?reveal=1"
 		set docFileName to filename of newRecord
-
+	
 		if templateFullName ends with "md" then
 			set body to plain text of newRecord
 			set body to my replace(body, "%UUID%", docUUID)
@@ -118,7 +117,7 @@ try
 		-- result, because the value is either true/false, and there's no
 		-- point to showing a dialog that says "a smart rule failed but I
 		-- can't tell you which one".
-		perform smart rule record newRecord
+		perform smart rule record newRecord trigger creation event
 	end tell
 on error error_message number error_number
 	if the error_number is not -128 then
