@@ -35,4 +35,4 @@ compile: $(sources:.applescript=.scpt)
 destdir = "$(HOME)/Library/Application Scripts/com.devon-technologies.think3/Menu"
 
 install: *.scpt
-	@install -bpS "$<" $(destdir)
+	install -bpS "$<" $(destdir)
