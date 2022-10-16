@@ -12,15 +12,15 @@
 
 tell application id "DNtp"
 	try
-		if not (exists (current workspace)) then return
-	
 		set chosenWorkspace to (choose from list (workspaces as list) ¬
 			with prompt "Choose workspace"  ¬
 			without multiple selections allowed ¬
 			and empty selection allowed)
-	
+		
 		if chosenWorkspace ≠ false then -- User chose, not cancelled
-			save workspace (get current workspace)
+			if exists (current workspace) then
+				save workspace (get current workspace)
+			end if
 			close every window
 			load workspace (item 1 of chosenWorkspace)
 		end if
