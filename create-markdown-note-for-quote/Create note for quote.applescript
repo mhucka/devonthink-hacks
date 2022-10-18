@@ -30,6 +30,10 @@ tell application id "DNtp"
 
 		-- Unwrap the text in the clipboard.
 		set selectedText to the clipboard as text
+		set AppleScript's text item delimiters to {return, linefeed}
+		set itemList to every text item of selectedText
+		set AppleScript's text item delimiters to " "
+		set the clipboard to the itemList as string
 
 		-- Construct a name based on the quoted text, but truncated.
 		if length of selectedText is less than maxDocTitleLength then
