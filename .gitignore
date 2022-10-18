@@ -50,3 +50,4 @@ unset-finder-comment/*.scpt
 zoinks-scripts/*.scpt
 create-document-from-template/*.scpt
 switch-workspace/*.scpt
+create-markdown-note-for-quote/*.scpt
