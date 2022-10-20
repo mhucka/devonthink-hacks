@@ -61,6 +61,19 @@ tell application id "DNtp"
 		set creation date of newDoc to current date
 		set modification date of newDoc to current date
 		set URL of newDoc to sourceURLorFile
+
+		-- Replace additional custom placeholders. DEVONthink can't do
+		-- these itself because the document has to be created first.
+		set docURL to reference URL of newDoc as string
+		set docRevealURL to docURL & "?reveal=1"
+		if templateFileName ends with "md" then
+			set body to plain text of newDoc
+			set body to my replace(body, "%source%", sourceURLorFile)
+			set body to my replace(body, "%UUID%", uuid of newDoc)
+			set body to my replace(body, "%documentURL%", docURL)
+			set body to my replace(body, "%documentRevealURL%", docRevealURL)
+			set plain text of newDoc to body
+		end if
 	on error msg number err
 		if err is not -128 then ¬
 			display alert "DEVONthink" message msg as warning
@@ -135,3 +148,18 @@ on pageURLorFile for (prog as text)
 			display alert prog message msg as warning
 	end try
 end pageURLorFile
+
+
+-- Replace text inside a document
+on replace(theText, placeholder, value)
+	if theText contains placeholder then
+		local od
+		set {od, text item delimiters of AppleScript} to ¬
+			{text item delimiters of AppleScript, placeholder}
+		set theText to text items of theText
+		set text item delimiters of AppleScript to value
+		set theText to "" & theText
+		set text item delimiters of AppleScript to od
+	end if
+	return theText
+end replace
