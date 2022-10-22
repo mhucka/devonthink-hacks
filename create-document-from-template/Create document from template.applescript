@@ -65,7 +65,7 @@ try
 		end repeat
 		
 		set userSelection to (choose from list templateNames ¬
-			with prompt "Template to use for new document:" default items {"Notebook"})
+			with prompt "Template to use for new document:" default items {"Notes"})
 		if userSelection is false then
 		   error number -128
 		end if
