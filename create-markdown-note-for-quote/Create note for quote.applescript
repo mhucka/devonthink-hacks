@@ -1,4 +1,4 @@
--- ==========================================================================
+-- ============================================================================
 -- @file    Create note for quote.applescript
 -- @brief   Create an md note, treating the highlighted text as a quote
 -- @author  Michael Hucka <mhucka@caltech.edu>
@@ -9,7 +9,7 @@
 --
 -- This assumes there is a template file in DEVONthink template diretory.
 -- The file name is set by the "templateFileName" parameter below.
--- ==========================================================================
+-- ============================================================================
 
 -- Name of the template file used to create the Markdown document.
 property templateFileName : "Quote.md"
@@ -17,24 +17,25 @@ property templateFileName : "Quote.md"
 -- Truncate the name of the document if it's longer than this.
 property maxDocTitleLength : 255
 
--- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--- ~~~~~~~ There are no more configurable options below this point. ~~~~~~~~~
--- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Main logic
+-- ............................................................................
 
-tell application "System Events"
-	-- Identify the application this is invoked in.
-	set prog to name of first application process whose frontmost is true
-
-	-- Copy the text highlighted in the current application. I couldn't
-	-- find a more direct way of doing this than to use GUI scripting.
-	keystroke "c" using {command down}
+tell application id "com.apple.systemevents"
+	try
+		-- Get a URL and title to refer back to the open document.
+		set theApp to first application process whose frontmost is true
+		set {sourceURL, sourceTitle} to my sourceInfo for theApp
+	
+		-- Copy the text highlighted in the current application. I couldn't
+		-- find a more direct way of doing this than to use GUI scripting.
+		keystroke "c" using {command down}
+	on error msg number err
+		display alert "Create note for quote" message msg as warning
+	end try
 end tell
 
 tell application id "DNtp"
 	try
-		-- Get a URL to refer back to the open document.
-		set sourceURLorFile to my pageURLorFile for prog
-
 		-- Get the path of the template to be used to create the new doc.
 		set supDir to path to application support from user domain as text
 		set tpDir to POSIX path of (supDir & "DEVONthink 3:Templates.noindex:")
@@ -60,7 +61,7 @@ tell application id "DNtp"
 		set the name of newDoc to docTitle
 		set creation date of newDoc to current date
 		set modification date of newDoc to current date
-		set URL of newDoc to sourceURLorFile
+		set URL of newDoc to sourceURL
 
 		-- Replace additional custom placeholders. DEVONthink can't do
 		-- these itself because the document has to be created first.
@@ -68,10 +69,11 @@ tell application id "DNtp"
 		set docRevealURL to docURL & "?reveal=1"
 		if templateFileName ends with "md" then
 			set body to plain text of newDoc
-			set body to my replace(body, "%source%", sourceURLorFile)
-			set body to my replace(body, "%UUID%", uuid of newDoc)
+			set body to my replace(body, "%sourceURL%", sourceURL)
+			set body to my replace(body, "%sourceTitle%", sourceTitle)
 			set body to my replace(body, "%documentURL%", docURL)
 			set body to my replace(body, "%documentRevealURL%", docRevealURL)
+			set body to my replace(body, "%UUID%", uuid of newDoc)
 			set plain text of newDoc to body
 		end if
 	on error msg number err
@@ -81,76 +83,101 @@ tell application id "DNtp"
 end tell
 
 
+-- Miscellaneous handlers.
+-- ............................................................................
+
 -- Get the URL or path of the frontmost document.
 -- The code to get the page URL from DEVONthink was modified from a post
 -- by user "pete31" to the DEVONthink forums on 2021-07-28 at https://
 -- discourse.devontechnologies.com/t/link-to-specific-page-of-a-pdf/65898/3
-on pageURLorFile for (prog as text)
+on sourceInfo for (theApp)
+	set appName to name of theApp
 	try
-		if (prog = "DEVONthink 3") then
+		-- First, check for common cases in which we know exactly what to do.
+		if appName = "DEVONthink 3" then
 			tell application id "DNtp"
 				if exists think window 1 then
 					set theWindow to think window 1
 				else
 					display notification "No DEVONthink window." ¬
 						with title "DEVONthink"
-					return ""
+					return {"", "Document"}
 				end if
 				set rec to content record of theWindow
 				if rec = missing value then
 					display notification "Could not get window contents." ¬
 						with title "DEVONthink"
-					return ""
+					return {"", "Document"}
 				end if
+				set sourceTitle to name of rec
+				set sourceURL to reference URL of rec
 				set recType to (type of rec) as string
 				if recType is in {"PDF document", "«constant ****pdf »"} then
 					set thePage to current page of theWindow
 					if thePage ≠ -1 then
-						return reference URL of rec & "?page=" & thePage
-					else
-						return reference URL of rec
+						set sourceURL to reference URL of rec & "?page=" & thePage
 					end if
-				else
-					return reference URL of rec
 				end if
+				return {sourceURL, sourceTitle}
 			end tell
-		else if (prog = "Safari") or (prog = "Webkit") then
+		else if appName = "Safari" or appName = "Webkit" then
 			using terms from application "Safari"
 				tell application "Safari"
-					return URL of front document
+					return {URL of front document, name of front document}
 				end tell
 			end using terms from
-		else if (prog contains "Chrome") or (prog = "Chromium") then
+		else if (appName contains "Chrome") or (appName = "Chromium") then
 			using terms from application "Google Chrome"
-				tell application prog
-					return URL of active tab of front window
+				tell application appName
+					set sourceURL to URL of active tab of front window
+					set sourceTitle to title of active tab of front window
+					return {sourceURL, sourceTitle}
 				end tell
 			end using terms from
-		else
-			-- Try to get the path to the file in the current app's window.
-			-- This next gnarly bit of code came from an answer posted on
-			-- 2019-09-28 by user "CJK" to Stack Overflow at
-			-- https://stackoverflow.com/a/58145535/743730
-			tell application id "com.apple.systemevents" to tell ¬
-			(the first process where it is frontmost) to tell ¬
-			(a reference to the front window) to if it exists then
-				tell its attribute "AXDocument"'s value
-					-- Apparently, "irrelevant" must be misspelled like this.
-					if it is not in [missing value, "file:///Irrelevent"] then ¬
-						return it
-				end tell
-			end if
-			-- Fall through if the code above doesn't return a value.
-			return ""
+		else if appName = "Preview" then
+			tell application id "com.apple.Preview"
+				return {path of document 1, name of document 1}
+			end tell
+		else if appName = "TextEdit" then
+			tell application "TextEdit"
+				set theDoc to document of window 1
+				return {path of theDoc, name of theDoc}
+			end tell
+		else if appName = "OmniOutliner" then
+			tell application "OmniOutliner"
+				set theFile to file of document 1
+				return {POSIX path of theFile, name of document 1}
+			end tell
 		end if
+
+		-- If we get here, it means we didn't recognize the application. Assume
+		-- the source is a document, and use a generic approach to try get the
+		-- path to the file in the current app's window. The next bit of code
+		-- is based in part on a posting by user "user2330514" on 2016-11-01
+		-- to Stack Overflow at https://stackoverflow.com/a/58145535/743730
+		-- Note: the "tell systemevents" part is needed to avoid error -2471.
+		tell application id "com.apple.systemevents"
+		    tell process appName
+		        if exists (1st window whose value of attribute "AXMain" is true) then
+		            tell (1st window whose value of attribute "AXMain" is true)
+						set sourceURL to value of attribute "AXDocument"
+		                set sourceTitle to value of attribute "AXTitle"
+						return {sourceURL, sourceTitle}
+		            end tell
+		        end if
+		    end tell
+		end tell
+
+		-- Fall-through default case, if the code above doesn't return a value.
+		return {"", "Document"}
 	on error msg number err
 		if err is not -128 then ¬
-			display alert prog message msg as warning
+			display alert appName message msg as warning
 	end try
-end pageURLorFile
+end sourceInfo
 
 
--- Replace text inside a document
+-- Replace text inside a DEVONthink document.
 on replace(theText, placeholder, value)
 	if theText contains placeholder then
 		local od
