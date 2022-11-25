@@ -10,7 +10,11 @@
 -- for a feature addition to DEVONthink. I have modified the original.
 -- ======================================================================
 
+use AppleScript version "2.4" -- Yosemite (10.10) or later
+use scripting additions
+
 tell application id "DNtp"
+    activate
 	try
 		set chosenWorkspace to (choose from list (workspaces as list) ¬
 			with prompt "Choose workspace"  ¬
