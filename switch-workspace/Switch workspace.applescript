@@ -25,7 +25,7 @@ tell application id "DNtp"
 			if exists (current workspace) then
 				save workspace (get current workspace)
 			end if
-			close every window
+			close every think window
 			load workspace (item 1 of chosenWorkspace)
 		end if
 	on error msg number err
