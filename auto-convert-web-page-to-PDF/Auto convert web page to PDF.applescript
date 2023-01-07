@@ -13,7 +13,7 @@
 -- This script will add a tag to the PDF document it creates. Set the
 -- next property value to the tag name that you want it to use.
 
-property tagForPDF : "π-archived-web-page"
+property tagForPDF : "π-archived-page"
 
 -- The companion bookmarklet can be used on regular web pages as well
 -- as pages that are open on PDF files.  In the case of web pages, this
@@ -42,11 +42,11 @@ on performSmartRule(theRecords)
 			-- quarters to try to trigger loading of more page elements.
 			repeat with n from 1 to 4
 				set scroll to "window.scrollTo(0," & n ¬
-				    & "*document.body.scrollHeight/4)"
+					& "*document.body.scrollHeight/4)"
 				do JavaScript scroll in current tab of recordWindow
 				delay 0.75
 			end repeat
-			
+
 			-- Return to the top. Do it twice because sometimes on some
 			-- pages (notably Twitter), the first attempt gets stuck in
 			-- some random location. (Ugh, what an utter hack this is.)
