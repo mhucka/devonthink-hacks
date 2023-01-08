@@ -1,6 +1,6 @@
 -- ======================================================================
--- @file	Unset URL
--- @brief	Unset the URL field value of select records
+-- @file	Unset Finder comment
+-- @brief	Unset the Finder comment of select records
 -- @author	Michael Hucka <mhucka@caltech.edu>
 -- @license MIT license; please see the file LICENSE in the repo
 -- @repo	https://github.com/mhucka/devonthink-hacks
