@@ -9,6 +9,27 @@
 -- records of your database.
 -- ======================================================================
 
+-- HTTP codes that IA may return:
+--
+-- #   Description
+-- --- -----------
+-- 404	HTTP Not Found
+-- 408	HTTP Request Timeout
+-- 410	HTTP Gone
+-- 429	Rate limit reached; try later
+-- 451	Unavailable for Legal Reasons
+-- 500	Internal Server Error
+-- 502	Bad Gateway
+-- 503	Gateway Timeout
+-- 509	Bandwidth Limit Exceeded
+-- 520	Server Returned an Unknown Error
+-- 521	Web Server is Down
+-- 523	Origin is Unreachable
+-- 524	A Timeout Occurred
+-- 525	SSL Handshake Failed
+-- 526	Invalid SSL Certificate
+
+
 on performSmartRule(selectedRecords)
 	repeat with _record in selectedRecords
 		set theURL to get URL of _record
@@ -25,30 +46,36 @@ on performSmartRule(selectedRecords)
 					add custom meta data archiveURL for "archiveurl" to _record
 				else if status = 404 then
 					-- There's something wrong with the URL.
-					display notification ("URL not found: " & theURL) with title "DEVONthink"
 					add custom meta data "NOT FOUND" for "archiveurl" to _record
 				else if status = 451 then
 					-- Unavailable for legal reasons.
 					add custom meta data "UNAVAILABLE" for "archiveurl" to _record
 				else if status = 429 or status = 410 or status > 500 then
 					-- Can't save a copy right now, possibly due to rate
-					-- limits or the site is offline or something. Did
+					-- limits or the site is offline or an error. Did
 					-- IA ever archive it? If so, use the last copy.
-					set past_result to do shell script ¬
+					set available_result to do shell script ¬
 						"curl -sSI 'https://web.archive.org/wayback/available?url=" & theURL & "'"
-					set result_lines to every paragraph of past_result
-					set status_line to item 1 of result_lines as string
-					set status to ((characters -4 thru -1 of status_line) as string) as number
-					if status = 200 then
-						set location_line to item 8 of result_lines as string
+					set result_lines to every paragraph of available_result
+					set location_line to item 8 of result_lines as string
+					if location_line contains "memento-location" then
 						set archiveURL to (characters 19 thru -1 of location_line) as string
 						add custom meta data archiveURL for "archiveurl" to _record
-					else
-						-- It's not available. In this case, return a
-						-- result so that we stop trying.
-						display notification ("Not available in IA: " & theURL) with title "DEVONthink"
+					-- Some of the following repeat tests done above,
+					-- because we may have gotten here due to the 429
+					-- when attempting to save the URL, and also, these
+					-- cases test the results of a different API call.
+					else if status = 404 then
+						-- There's something wrong with the URL.
+						add custom meta data "NOT FOUND" for "archiveurl" to _record
+					else if status = 410 or status = 451 then
+						-- Gone or unavailable for legal reasons.
+						add custom meta data "UNAVAILABLE" for "archiveurl" to _record
+					else if status ≥ 525 then
 						add custom meta data "NO ARCHIVED COPY" for "archiveurl" to _record
 					end if
+					-- All others cases: try another time. Assume other
+					-- rules in DEVONthink will deal with that.
 				end if
 			on error msg number code
 				if the code is not -128 then
@@ -58,7 +85,3 @@ on performSmartRule(selectedRecords)
 		end if
 	end repeat
 end performSmartRule
-
--- I found a list of status codes returned by the Wayback Machine at
--- https://github.com/brave/brave-browser/wiki/Wayback-Machine-Infobar#observed-status-codes
--- but I don't know how current or accurate it is.
