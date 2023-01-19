@@ -17,6 +17,12 @@ on performSmartRule(selectedRecords)
 	repeat with _record in selectedRecords
 		set theURL to get URL of _record
 		if theURL ≠ "" then
+			if "discourse" is in theURL or "forum" is in theURL then
+				if theURL ends with "/print" then
+					-- Strip off /print part before sending these URLs.
+					set theURL to (characters 1 thru -7 of theURL) as string
+				end if
+			end if
 			try
 				set result to do shell script ¬
 					"curl -sSI 'https://web.archive.org/save/" & theURL & "'"
