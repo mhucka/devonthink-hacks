@@ -5,30 +5,13 @@
 -- @license MIT license; please see the file LICENSE in the repo
 -- @repo    https://github.com/mhucka/devonthink-hacks
 --
--- This assumes a metadata field named "archiveurl" exists on the
+-- This is meant to be executed by a smart rule in DEVONthink.
+-- This script assumes a metadata field named "archiveurl" exists on the
 -- records of your database.
 -- ======================================================================
 
--- HTTP codes that IA may return:
---
--- #   Description
--- --- -----------
--- 404	HTTP Not Found
--- 408	HTTP Request Timeout
--- 410	HTTP Gone
--- 429	Rate limit reached; try later
--- 451	Unavailable for Legal Reasons
--- 500	Internal Server Error
--- 502	Bad Gateway
--- 503	Gateway Timeout
--- 509	Bandwidth Limit Exceeded
--- 520	Server Returned an Unknown Error
--- 521	Web Server is Down
--- 523	Origin is Unreachable
--- 524	A Timeout Occurred
--- 525	SSL Handshake Failed
--- 526	Invalid SSL Certificate
-
+-- Set to the name of the smart rule, so notifications can mention it.
+property smartRuleName : "send URL to IA"
 
 on performSmartRule(selectedRecords)
 	repeat with _record in selectedRecords
@@ -44,6 +27,7 @@ on performSmartRule(selectedRecords)
 					set location_line to item 6 of result_lines
 					set archiveURL to (characters 11 thru -1 of location_line) as string
 					add custom meta data archiveURL for "archiveurl" to _record
+					my notify("Sent URL to the IA", theURL)
 				else if status = 404 then
 					-- There's something wrong with the URL.
 					add custom meta data "NOT FOUND" for "archiveurl" to _record
@@ -61,6 +45,7 @@ on performSmartRule(selectedRecords)
 					if location_line contains "memento-location" then
 						set archiveURL to (characters 19 thru -1 of location_line) as string
 						add custom meta data archiveURL for "archiveurl" to _record
+						my notify("Found existing copy in IA", theURL)
 					-- Some of the following repeat tests done above,
 					-- because we may have gotten here due to the 429
 					-- when attempting to save the URL, and also, these
@@ -85,3 +70,29 @@ on performSmartRule(selectedRecords)
 		end if
 	end repeat
 end performSmartRule
+
+on notify(msg, _url)
+	display notification _url with title msg ¬
+		subtitle "(Action for smart rule '" & smartRuleName & "')"
+end notify
+
+
+-- Reminder about HTTP codes that IA may return:
+--
+-- #   Description
+-- --- -----------
+-- 404	HTTP Not Found
+-- 408	HTTP Request Timeout
+-- 410	HTTP Gone
+-- 429	Rate limit reached; try later
+-- 451	Unavailable for Legal Reasons
+-- 500	Internal Server Error
+-- 502	Bad Gateway
+-- 503	Gateway Timeout
+-- 509	Bandwidth Limit Exceeded
+-- 520	Server Returned an Unknown Error
+-- 521	Web Server is Down
+-- 523	Origin is Unreachable
+-- 524	A Timeout Occurred
+-- 525	SSL Handshake Failed
+-- 526	Invalid SSL Certificate
