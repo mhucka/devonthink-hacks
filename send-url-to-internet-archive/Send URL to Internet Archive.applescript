@@ -70,16 +70,16 @@ on performSmartRule(selectedRecords)
 				end if
 			on error msg number code
 				if the code is not -128 then
-					display alert "DEVONthink smart rule" message msg as warning
+					my notify(msg, "leaving item in queue")
 				end if
 			end try
 		end if
 	end repeat
 end performSmartRule
 
-on notify(msg, _url)
-	display notification _url with title msg ¬
-		subtitle "(Action for smart rule '" & smartRuleName & "')"
+on notify(headline, body)
+	display notification body with title headline ¬
+		subtitle "(Smart rule '" & smartRuleName & "')"
 end notify
 
 
