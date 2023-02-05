@@ -41,7 +41,6 @@ tell application id "DNtp"
 		set tpDir to POSIX path of (supDir & "DEVONthink 3:Templates.noindex:")
 		set templateFile to (POSIX path of tpDir & templateFileName)
 
-		-- Unwrap the text in the clipboard.
 		set selectedText to the clipboard as text
 
 		-- Construct a name based on the selected text, but truncated.
