@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# This script has a list of hidden preferences that were documented as of
+# version 3.8.2 of DEVONthink here:
+# https://download.devontechnologies.com/download/devonthink/3.8.2/DEVONthink.help/Contents/Resources/pgs/appendix-hiddenpreferences.html
+
+year=$(date +%Y)
+key="com.devon-technologies.think3"
+
+print_value() {
+    value=$(defaults read $key $1 2>&1 /dev/null | egrep -v ^$year)
+    if [[ $value =~ 'does not exist' ]] ; then
+        echo \# $1 not set
+    else
+        type=$(defaults read-type $key $1 2>&1 /dev/null | egrep -v ^$year)
+        if  [[ $type =~ 'string' ]]; then
+            echo defaults write $key $1 -string $value
+        elif [[ $type =~ 'boolean' ]]; then
+            if [[ $value -eq 1 ]] ; then
+                echo defaults write $key $1 -bool TRUE
+            else
+                echo defaults write $key $1 -bool FALSE
+            fi
+        else
+            echo defaults write $key value is $value
+        fi
+    fi
+}
+
+print_value AdditionalPlainTextExtensions
+print_value AdditionalXMLExtensions
+print_value BatesNumberDigits
+print_value CounterDigits
+print_value DisableActivityWindow
+print_value DisableAutomaticDeconsolidation
+print_value DisableAutomaticUpdatingOfIndexedItems
+print_value DisableBadgeLabel
+print_value DisableFileSystemEvents
+print_value DisableFileCoordination
+print_value DisableFinderTags
+print_value DisplayGroupsInPreviewPane
+print_value DisableHighlightColorMapping
+print_value DisablePreprocessedClipping
+print_value DisableTagAutocompletion
+print_value DontAutomaticallyEnableOperatorsOptionOfSearchInspector
+print_value EnableApplicationFiles
+print_value EnableAutomaticConsolidation
+print_value EnableEvernoteRTFDImport
+print_value EnablePDFDrawing
+print_value ForceEditablePDFs
+print_value IndexRawMarkdownSource
+print_value MaximumNumberOfRecentSearches
+print_value MonospacedSidebarFont
+print_value MonospacedViewFont
+print_value PersistentSortingOfSearchResults
+print_value PlainTextIsMarkdown
+print_value RawMarkdownPasting
+print_value RichNotesWithoutAttachments
+print_value ShowAdditionalInfoInPathBar
+print_value SyncDebugLog
+print_value WindowToolbarStyleExpanded
