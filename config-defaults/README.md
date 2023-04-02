@@ -7,5 +7,5 @@ These are quick shell scripts I use to set the hidden preferences to my liking, 
 
 # Copy prefs.sh to another machine
 # Set the values on the other machine
-./prefs.sh
+sh prefs.sh
 ```
