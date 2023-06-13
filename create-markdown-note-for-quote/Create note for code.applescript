@@ -43,7 +43,7 @@ tell application id "DNtp"
 
 		set selectedText to the clipboard as text
 
-		-- Construct a name based on the selected text, but truncated.
+		-- Make a default title based on a truncated version of the text
 		if length of selectedText is less than maxDocTitleLength then
 			set docTitle to selectedText
 		else
@@ -52,8 +52,7 @@ tell application id "DNtp"
 
 		-- If you don't use the "placeholders" option, DEVONthink will not
 		-- substitute its built-in placeholders. So, use at least one.
-		set newDoc to import templateFile placeholders {name:docTitle}
-		set the name of newDoc to docTitle
+		set newDoc to import templateFile placeholders {name:docTitle} name docTitle
 		set creation date of newDoc to current date
 		set modification date of newDoc to current date
 		set URL of newDoc to sourceURL
