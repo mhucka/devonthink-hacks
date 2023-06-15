@@ -58,7 +58,6 @@ tell application id "DNtp"
 		-- If you don't use the "placeholders" option, DEVONthink will not
 		-- substitute its built-in placeholders. So, use at least one.
 		set newDoc to import templateFile placeholders {name:docTitle} name docTitle
-		set the name of newDoc to docTitle
 		set creation date of newDoc to current date
 		set modification date of newDoc to current date
 		set URL of newDoc to sourceURL
