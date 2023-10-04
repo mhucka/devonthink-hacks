@@ -11,11 +11,12 @@
 -- The file name is set by the "templateFileName" parameter below.
 -- ============================================================================
 
--- Name of the template file used to create the Markdown document.
+-- Name of the template file used to create the Markdown document. (Tip: add
+-- tags to this file in the Finder and the DEVONthink doc will inherit them.)
 property templateFileName : "Quote.md"
 
 -- Truncate the name of the document if it's longer than this.
-property maxDocTitleLength : 255
+property maxDocTitleLength : 100
 
 -- Main logic
 -- ............................................................................
@@ -29,6 +30,8 @@ tell application id "com.apple.systemevents"
 		-- Copy the text highlighted in the current application. I couldn't
 		-- find a more direct way of doing this than to use GUI scripting.
 		keystroke "c" using {command down}
+		-- Critical: need this delay, or the clipboard may have stale data.
+		delay 0.5
 	on error msg number err
 		display alert "Create note for quote" message msg as warning
 	end try
@@ -53,7 +56,10 @@ tell application id "DNtp"
 			set docTitle to selectedText
 		else
 			set docTitle to text 1 thru maxDocTitleLength of selectedText
+			set docTitle to docTitle & "…"
 		end if
+		set shortDate to (short date string of (current date))
+		set docTitle to shortDate & " clipped: \"" & docTitle & "\""
 
 		-- If you don't use the "placeholders" option, DEVONthink will not
 		-- substitute its built-in placeholders. So, use at least one.
