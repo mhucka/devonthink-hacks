@@ -28,3 +28,11 @@ space+=
 # Finally, the command to compile files:
 
 compile: $(sources:.applescript=.scpt)
+
+# Not all scripts should be put here, but for the ones that should, having this
+# saves me from banging my head trying to find this obscure path every time.
+
+destdir = "$(HOME)/Library/Application Scripts/com.devon-technologies.think3/Menu"
+
+install: *.scpt
+	install -bpS "$<" $(destdir)
