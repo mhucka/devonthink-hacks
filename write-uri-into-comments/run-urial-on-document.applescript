@@ -30,8 +30,8 @@ on performSmartRule(selectedRecords)
 				set fp to quoted form of file_path
 
 				set result to do shell script ¬
-					"PATH=$PATH:$HOME/.local/bin:/usr/local/bin urial" ¬
-					& " -m update -U " & uri & " " & fp
+					"PATH=$PATH:$HOME/.local/bin:$HOME/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin" ¬
+					& " urial -m update -U " & uri & " " & fp
 		
 				-- Display a notification if urial returned a msg.
 				if result is not equal to "" then

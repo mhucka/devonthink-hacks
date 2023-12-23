@@ -24,7 +24,7 @@ on performSmartRule(selectedRecords)
 			repeat with _record in selectedRecords
 				set _abstract to do shell script ¬
 					"echo " & (URL of _record) & " | " & ¬
-					"PATH=$PATH:$HOME/.local/bin:/usr/local/bin" ¬
+					"PATH=$PATH:$HOME/.local/bin:$HOME/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin" ¬
 					& " zoinks -U abstractNote"
 				if _abstract ≠ "" then
 				    -- Remove embedded newlines in the abstract.

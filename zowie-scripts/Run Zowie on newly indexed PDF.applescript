@@ -32,7 +32,7 @@ on performSmartRule(selectedRecords)
 				-- Now run Zowie. The PATH setting adds common locations
 				-- where Zowie may be installed on the user's computer.
 				set result to do shell script ¬
-					"PATH=$PATH:$HOME/.local/bin:/usr/local/bin" ¬
+					"PATH=$PATH:$HOME/.local/bin:$HOME/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin" ¬
 					& " zowie -s -q " & quoted_path
 
 				-- If Zowie returned a msg, something went wrong.
