@@ -1,29 +1,27 @@
-# =========================================================== -*- gitignore -*-
 # @file    .gitignore
-# @brief   Files and patterns for files and subdirs that git should ignore
-# @date    2022-07-15
+# @brief   Rules for files and subdirectories to be ignored by git
 # @license Please see the file named LICENSE in the project directory
-# @website https://github.com/mhucka/devonthink-hacks
+# @repo    https://github.com/caltechlibrary/template
 #
-# Rules that apply to one's way of doing things (and the particular tools you
-# happen to use) are best put in a global git ignore file. See
-# "Configuring ignored files for all repositories on your computer" here:
-# https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-# (accessed on 2022-07-14). For example, Emacs checkpoint and backup files are
-# things that are not specific to a given project; rather, Emacs users will
-# see them created everywhere, in all projects, because they're a byproduct
-# of using Emacs, not a consequence of working on a particular project. Thus,
-# they belong in a user's global ignores list, not in this project .gitignore.
-#
-# A useful starting point for global .gitignore file contents can be found at
-# https://github.com/github/gitignore/tree/main/Global (as of 2022-07-14).
-# =============================================================================
+# ╭─────────────────────── Notice ── Notice ── Notice ────────────────────────╮
+# │ The recommended approach is to add ONLY project-specific rules to the     │
+# │ .gitignore of a repo. Users can put rules that apply to their individual  │
+# │ ways of doing things into global git ignore files that they set up using  │
+# │ (e.g.) "git config --global core.excludesfile ~/.gitignore_global".       │
+# │ A number of files such as Emacs checkpoint and backup files are things    │
+# │ that are not specific to a given project; rather, Emacs creates them      │
+# │ everywhere, in all projects, because they're a byproduct of how Emacs     │
+# │ works. Thus, rules to ignore them belong in users' own global .gitignore  │
+# │ files, not in a project's .gitignore.                                     │
+# │                                                                           │
+# │ A useful starting point for global .gitignore file contents can be found  │
+# │ at https://github.com/github/gitignore/tree/main/Global (as of 2022-07-14)│
+# ╰───────────────────────────────────────────────────────────────────────────╯
 
 # AppleScript-specific things to ignore
 # .............................................................................
 
 *.scpt
-
 
 # Python-specific things to ignore
 # .............................................................................
