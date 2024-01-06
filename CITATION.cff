@@ -1,23 +1,25 @@
-# YAML 1.2
----
-authors: 
-  -
-    affiliation: "Caltech Library"
-    given-names: Mike
-    family-names: Hucka
-    orcid: "0000-0001-9105-5960"
-cff-version: "1.1.0"
-message: "If you use this software, please cite it using these metadata."
-repository-code: "https://github.com/caltechlibrary/foliage"
-title: "Mike's DEVONthink Hacks"
-date-released: 2022
-version: "unversioned"
-keywords: 
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Hucka
+    given-names: Michael
+    email: mhucka@caltech.edu
+    orcid: https://orcid.org/0000-0001-9105-5960
+title: Mike's DEVONthink hacks
+abstract: Scripts and programs I use with DEVONthink
+version: unversioned
+date-released: 2024-01-06
+repository-code: "https://github.com/mhucka/devonthink-hacks"
+license: MIT
+type: software
+keywords:
+  - software
   - DEVONthink
+  - personal information management
+  - AppleScript
+  - Python
   - macOS
   - automation
   - scripting
-  - AppleScript
   - archiving
   - PDF
-...
