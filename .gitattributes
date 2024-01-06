@@ -1,15 +1,15 @@
-# @file    .gitattributes
-# @brief   Repository-specific file attribute associations
-# @date    2023-12-30
-# @license Please see the file named LICENSE in the project directory
-# @website https://github.com/mhucka/devonthink-hacks
+# Repository-specific file attribute associations for git.
+#
+# Copyright 2024 Michael Hucka.
+# License: MIT License – see file "LICENSE" in the project website.
+# Website: https://github.com/mhucka/mac-scripts
 
-# Set the default behavior, in case people don't have core.autocrlf set.
+# Default interpretation of files, in case people don't have core.autocrlf set.
 # .............................................................................
 
 * text=auto
 
-# Specify what's text and should be normalized for some common files.
+# Common text files that should be normalized.
 # .............................................................................
 
 *.py text
@@ -23,7 +23,7 @@
 *.sh text
 LICENSE text
 
-# Denote all files that are truly binary and should not be modified.
+# Common files that are truly binary and should not be modified.
 # .............................................................................
 
 *.png binary
@@ -31,13 +31,13 @@ LICENSE text
 *.xls binary
 *.doc binary
 
-# This next one is because in other projects, we had problems with git getting
-# confused about line endings when Windows & Mac users edited the same files.
+# Special case for CSV. We've had problems with git getting confused about
+# CSV line endings when both Windows & Mac users edited the same files.
 # .............................................................................
 
 *.csv binary diff=csv
 
-# AppleScript
+# AppleScript.
 # .............................................................................
 
 *.scpt diff=scpt
