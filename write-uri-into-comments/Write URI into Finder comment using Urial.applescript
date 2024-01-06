@@ -1,14 +1,11 @@
--- ======================================================================
--- @file	write-urial-on-document.applescript
--- @brief	Execute urial as an external program
--- @author	Michael Hucka <mhucka@caltech.edu>
--- @license MIT license -- please see the file LICENSE in the repo
--- @repo	https://github.com/mhucka/devonthink-hacks
+-- Execute urial as an external program.
 --
 -- This is an AppleScript fragment that will only work as the script
--- executed by a Smart Rule in DEVONthink. For more information, see
--- https://github.com/mhucka/devonthink-hacks/write-uri-into-comments
--- ======================================================================
+-- executed by a Smart Rule in DEVONthink.
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 
 on performSmartRule(selectedRecords)
 	tell application id "DNtp"
@@ -30,7 +27,7 @@ on performSmartRule(selectedRecords)
 				set fp to quoted form of file_path
 
 				set result to do shell script ¬
-					"PATH=$PATH:$HOME/.local/bin:$HOME/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin" ¬
+					"PATH=$PATH:$HOME/.local/bin:$HOME/.pyenv/shims:$HOME/.pyenv/bin:/usr/local/bin:/opt/homebrew/bin" ¬
 					& " urial -m update -U " & uri & " " & fp
 		
 				-- Display a notification if urial returned a msg.
