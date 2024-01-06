@@ -1,14 +1,12 @@
--- ======================================================================
--- @file    Send URL to Internet Archive.applescript
--- @brief   Send the URL of the selected items to the Internet Archive
--- @author  Michael Hucka <mhucka@caltech.edu>
--- @license MIT license; please see the file LICENSE in the repo
--- @repo    https://github.com/mhucka/devonthink-hacks
+-- Send the URL of the selected items to the Internet Archive
 --
 -- This is meant to be executed by a smart rule in DEVONthink.
 -- This script assumes a metadata field named "archiveurl" exists on the
 -- records of your database.
--- ======================================================================
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 
 -- Set to the name of the smart rule, so notifications can mention it.
 property smartRuleName : "send URL to IA"
@@ -33,7 +31,6 @@ on performSmartRule(selectedRecords)
 					set location_line to item 6 of result_lines
 					set archiveURL to (characters 11 thru -1 of location_line) as string
 					add custom meta data archiveURL for "archiveurl" to _record
-					my notify("Sent URL to the IA", theURL)
 				else if status = 404 then
 					-- There's something wrong with the URL.
 					add custom meta data "NOT FOUND" for "archiveurl" to _record
@@ -51,7 +48,6 @@ on performSmartRule(selectedRecords)
 					if location_line contains "memento-location" then
 						set archiveURL to (characters 19 thru -1 of location_line) as string
 						add custom meta data archiveURL for "archiveurl" to _record
-						my notify("Found existing copy in IA", theURL)
 					-- Some of the following repeat tests done above,
 					-- because we may have gotten here due to the 429
 					-- when attempting to save the URL, and also, these
@@ -65,8 +61,10 @@ on performSmartRule(selectedRecords)
 					else if status ≥ 525 then
 						add custom meta data "NO ARCHIVED COPY" for "archiveurl" to _record
 					end if
-					-- All others cases: try another time. Assume other
-					-- rules in DEVONthink will deal with that.
+				else
+					-- Got some other failure status code. Let other rules
+					-- handle retrying some other time.
+					add custom meta data "RETRY LATER" for "archiveurl" to _record
 				end if
 			on error msg number code
 				if the code is not -128 then

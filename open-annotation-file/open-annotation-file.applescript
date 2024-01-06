@@ -1,10 +1,8 @@
--- ============================================================================
--- @file    open-annotation-file.applescript
--- @brief   Open the annotation file associated with the selected document
--- @author  Michael Hucka <mhucka@caltech.edu>
--- @license MIT license -- please see the file LICENSE in the parent directory
--- @repo    https://github.com/mhucka/devonthink-hacks
--- ============================================================================
+-- Open the annotation file associated with the selected document
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 
 tell application id "DNtp"
 	try

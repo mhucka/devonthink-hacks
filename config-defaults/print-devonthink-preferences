@@ -1,7 +1,13 @@
-#!/bin/bash
-
-# This script has a list of hidden preferences that were documented as of
-# version 3.9.4 of DEVONthink in the DEVONthink user manual.
+#!/usr/bin/env bash
+# Print the current values of all DEVONthink hidden preferences.
+#
+# Warning: this contains an explicit list of hidden preferences that were
+# documented as of version 3.9.4 of DEVONthink in the DEVONthink user manual.
+# The list needs to be kept up-to-date manually.
+#
+# Copyright 2024 Michael Hucka.
+# License: MIT License – see file "LICENSE" in the project website.
+# Website: https://github.com/mhucka/devonthink-hacks
 
 year=$(date +%Y)
 key="com.devon-technologies.think3"
@@ -26,8 +32,8 @@ print_value() {
     fi
 }
 
-print_value AdditionalPlainTextExtensions
 print_value AVSkippingInterval
+print_value AdditionalPlainTextExtensions
 print_value AdditionalXMLExtensions
 print_value BatesNumberDigits
 print_value CounterDigits
@@ -35,20 +41,20 @@ print_value DisableActivityWindow
 print_value DisableAutomaticDeconsolidation
 print_value DisableAutomaticUpdatingOfIndexedItems
 print_value DisableBadgeLabel
-print_value DisableFileSystemEvents
 print_value DisableFileCoordination
+print_value DisableFileSystemEvents
 print_value DisableFinderTags
-print_value DisplayGroupsInPreviewPane
 print_value DisableHighlightColorMapping
 print_value DisablePDFValidation
 print_value DisablePreprocessedClipping
 print_value DisableRelativeDates
 print_value DisableTagAutocompletion
+print_value DisplayGroupsInPreviewPane
 print_value DontAutomaticallyEnableOperatorsOptionOfSearchInspector
 print_value EnableApplicationFiles
 print_value EnableAutomaticConsolidation
-print_value EnableFSEventLogging
 print_value EnableEvernoteRTFDImport
+print_value EnableFSEventLogging
 print_value EnableSearchFieldAutocompletion
 print_value ForceEditablePDFs
 print_value IndexRawMarkdownSource

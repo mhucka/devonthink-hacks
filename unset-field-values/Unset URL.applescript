@@ -1,8 +1,8 @@
--- @file	Unset URL
--- @brief	Unset the URL field value of select records
--- @author	Michael Hucka <mhucka@caltech.edu>
--- @license MIT license; please see the file LICENSE in the repo
--- @repo	https://github.com/mhucka/devonthink-hacks
+-- Unset the URL field value of select records.
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 
 use AppleScript version "2.4" -- Yosemite (10.10) or later
 use scripting additions

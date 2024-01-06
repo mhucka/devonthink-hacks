@@ -1,15 +1,13 @@
--- ============================================================================
--- @file    Create document from template.applescript
--- @brief   Script to create a document from a template and name it
--- @author  Michael Hucka <mhucka@caltech.edu>
--- @license MIT license -- please see the file LICENSE in the parent directory
--- @repo    https://github.com/mhucka/devonthink-hacks
--- ============================================================================
+-- Create a doc from a template file and perform keyword substitution.
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 
--- Configuration variables -- THE FOLLOWING MUST BE UPDATED MANUALLY.
--- ............................................................................
+-- List of template files -- MUST BE UPDATED MANUALLY ~~~~~~~~~~~~~~~~~~
 
 set templates to { ¬
+	"Card.md", ¬
 	"Code.md", ¬
 	"Diary.ooutline", ¬
 	"Empty markdown.md", ¬
@@ -22,9 +20,7 @@ set templates to { ¬
 	"Term definition.md" ¬
 }
 
-
--- Helper functions.
--- ............................................................................
+-- Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -- The following code is based on a function posted by "jobu" on 2004-08-11
 -- at https://macscripter.net/viewtopic.php?pid=32191--p32191
@@ -54,8 +50,7 @@ on replace(theText, placeholder, value)
 	return theText
 end replace
 
--- Main body.
--- ............................................................................
+-- Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 try
 	tell application id "DNtp"
@@ -102,7 +97,10 @@ try
 		set docRevealURL to recordURL & "?reveal=1"
 		set docFileName to filename of newRecord
 	
-		if templateFullName ends with "md" then
+		if templateFullName ends with "ooutline" then
+			do shell script "/opt/homebrew/bin/ottoman -m -r -i '" & filePath ¬
+				& "' description=" & recordURL & " subject=" & groupURL
+		else if templateFullName ends with "md" then
 			set body to plain text of newRecord
 			set body to my replace(body, "%UUID%", docUUID)
 			set body to my replace(body, "%fileName%", docFileName)

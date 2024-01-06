@@ -1,17 +1,13 @@
-# =============================================================================
-# @file    Open current web browser location in DEVONthink
-# @brief   Create a bookmark in DEVONthink & open it
-# @author  Michael Hucka <mhucka@caltech.edu>
-# @license MIT license -- please see the file LICENSE in the parent directory
-# @repo    https://github.com/mhucka/devonthink-hacks
-# =============================================================================
+-- Open current web browser location in DEVONthink
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 
 use AppleScript version "2.4" -- Yosemite (10.10) or later
 use scripting additions
 
-
-# Helper functions
-# .............................................................................
+-- Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 on showError(msg)
 	display dialog msg buttons {"OK"} default button 1 with icon 0
@@ -48,8 +44,7 @@ on getWebPageData()
 end getWebPageData
 
 
-# Main body.
-# .............................................................................
+# Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 tell application "DEVONthink 3" to launch
 

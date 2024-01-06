@@ -1,14 +1,11 @@
--- ======================================================================
--- @file    Run Zowie on newly indexed PDF.applescript
--- @brief   Script for DEVONthink smart rule to run Zowie on new additions
--- @author  Michael Hucka <mhucka@caltech.edu>
--- @license MIT license; please see the file LICENSE in the repo
--- @repo    https://github.com/mhucka/devonthink-hacks
+-- Script for DEVONthink smart rule to run Zowie on new additions
 --
 -- This is an AppleScript fragment that will only work as the script
--- executed by a Smart Rule in DEVONthink. For more information, see
--- https://github.com/mhucka/devonthink-hacks/zowie-scripts
--- ======================================================================
+-- executed by a Smart Rule in DEVONthink.
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 
 on performSmartRule(selectedRecords)
 	tell application "System Events"
@@ -32,7 +29,7 @@ on performSmartRule(selectedRecords)
 				-- Now run Zowie. The PATH setting adds common locations
 				-- where Zowie may be installed on the user's computer.
 				set result to do shell script ¬
-					"PATH=$PATH:$HOME/.local/bin:$HOME/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin" ¬
+					"PATH=$PATH:$HOME/.local/bin:$HOME/.pyenv/shims:$HOME/.pyenv/bin:/usr/local/bin:/opt/homebrew/bin" ¬
 					& " zowie -s -q " & quoted_path
 
 				-- If Zowie returned a msg, something went wrong.

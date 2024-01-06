@@ -1,9 +1,8 @@
--- ======================================================================
--- @file    Add abstract for Zotero record.applescript
--- @brief   Script for DEVONthink smart rule to run Zoinks
--- @author  Michael Hucka <mhucka@caltech.edu>
--- @license MIT license; please see the file LICENSE in the repo
--- @repo    https://github.com/mhucka/devonthink-hacks
+-- Set custom metadata "abstract" using Zonks
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 --
 -- This is an AppleScript fragment that will only work as the script
 -- executed by a Smart Rule in DEVONthink. It runs Zoinks to get the
@@ -12,11 +11,10 @@
 -- for storing the abstract. If there is no abstract in the Zotero
 -- record, this sets the metadata field value to "(No abstract.)".
 --
--- This expects to be passed a record that has a zotero://select/... link
--- in its "URL" metadata field. This Zotero link value is set by a
--- separate DEVONthink Smart Rule that runs another program, Zowie.
+-- This expects to be passed a record that has a zotero://select/...
+-- link in its "URL" metadata field. This Zotero link value is set by
+-- a separate DEVONthink Smart Rule that runs another program, Zowie.
 -- (C.f. https://github.com/mhucka/devonthink-hacks/zowie-scripts)
--- ======================================================================
 
 on performSmartRule(selectedRecords)
 	tell application id "DNtp"
@@ -24,7 +22,7 @@ on performSmartRule(selectedRecords)
 			repeat with _record in selectedRecords
 				set _abstract to do shell script ¬
 					"echo " & (URL of _record) & " | " & ¬
-					"PATH=$PATH:$HOME/.local/bin:$HOME/.pyenv/shims:/usr/local/bin:/opt/homebrew/bin" ¬
+					"PATH=$PATH:$HOME/.local/bin:$HOME/.pyenv/shims:$HOME/.pyenv/bin:/usr/local/bin:/opt/homebrew/bin" ¬
 					& " zoinks -U abstractNote"
 				if _abstract ≠ "" then
 				    -- Remove embedded newlines in the abstract.

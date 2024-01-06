@@ -1,14 +1,12 @@
--- ======================================================================
--- @file    Auto convert web page to PDF.applescript
--- @brief   Script for DEVONthink to convert a webpage bookmark to PDF
--- @author  Michael Hucka <mhucka@caltech.edu>
--- @license MIT license; please see the file LICENSE in the repo
--- @repo    https://github.com/mhucka/devonthink-hacks
+-- Script for DEVONthink to convert a webpage bookmark to PDF
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 --
 -- This is an AppleScript fragment that will only work as the script
 -- executed by a Smart Rule in DEVONthink. For more information, see
 -- https://github.com/mhucka/devonthink-hacks/auto-convert-web-page-to-PDF/
--- ======================================================================
 
 -- This script will add a tag to the PDF document it creates. Set the
 -- next property value to the tag name that you want it to use.

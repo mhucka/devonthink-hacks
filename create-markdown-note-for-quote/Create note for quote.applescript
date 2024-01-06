@@ -1,15 +1,13 @@
--- ============================================================================
--- @file    Create note for quote.applescript
--- @brief   Create an md note, treating the highlighted text as a quote
--- @author  Michael Hucka <mhucka@caltech.edu>
--- @license MIT license; please see the file LICENSE in the repo
--- @repo    https://github.com/mhucka/devonthink-hacks
---
--- This is meant to work anywhere, not just inside DEVONthink.
+-- Create a Markdown note, treating the highlighted text as a quote.
 --
 -- This assumes there is a template file in DEVONthink template diretory.
 -- The file name is set by the "templateFileName" parameter below.
--- ============================================================================
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
+
+-- Configuration variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -- Name of the template file used to create the Markdown document. (Tip: add
 -- tags to this file in the Finder and the DEVONthink doc will inherit them.)
@@ -18,8 +16,8 @@ property templateFileName : "Quote.md"
 -- Truncate the name of the document if it's longer than this.
 property maxDocTitleLength : 100
 
--- Main logic
--- ............................................................................
+
+-- Main logic ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 tell application id "com.apple.systemevents"
 	try
@@ -88,8 +86,7 @@ tell application id "DNtp"
 end tell
 
 
--- Miscellaneous handlers.
--- ............................................................................
+-- Miscellaneous handlers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -- Get the URL or path of the frontmost document.
 -- The code to get the page URL from DEVONthink was modified from a post
