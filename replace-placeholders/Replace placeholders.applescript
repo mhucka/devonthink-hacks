@@ -1,14 +1,12 @@
--- ======================================================================
--- @file	replace-placeholders.applescript
--- @brief	Replace custom placeholders in the text of a document
--- @author	Michael Hucka <mhucka@caltech.edu>
--- @license MIT license -- please see the file LICENSE in the repo
--- @repo	https://github.com/mhucka/devonthink-hacks
+-- Replace custom placeholders in the text of a document
 --
 -- This is an AppleScript fragment that will only work as the script
 -- executed by a Smart Rule in DEVONthink. For more information, see
 -- https://github.com/mhucka/devonthink-hacks/replace-placeholders
--- ======================================================================
+--
+-- Copyright 2024 Michael Hucka.
+-- License: MIT License – see file "LICENSE" in the project website.
+-- Website: https://github.com/mhucka/devonthink-hacks
 
 on performSmartRule(selectedRecords)
 	tell application id "DNtp"
