@@ -1,14 +1,25 @@
-# Makefile for compiling AppleScript files
+# My generic Makefile for compiling AppleScript files.
 #
 # Copyright 2024 Michael Hucka.
 # License: MIT License – see file "LICENSE" in the project website.
 # Website: https://github.com/mhucka/devonthink-hacks
+
+# Preliminary settings and tests ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 SHELL=/bin/bash
 .ONESHELL:                              # Run all commands in the same shell.
 .SHELLFLAGS += -e                       # Exit at the first error.
 
 thisdir := $(shell basename $(CURDIR))
+
+# When I run M-x compile using this Makefile, the compile target works but the
+# install target fails. It works outside Emacs in a regular shell terminal. I
+# haven't figured out the reason, so for now, this test reminds me to avoid it.
+
+ifeq ($(origin INSIDE_EMACS),environment)
+$(error "Do not run make from inside Emacs with this Makefile.")
+endif
+
 
 # Print help if no command is given ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
