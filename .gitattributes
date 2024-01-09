@@ -2,7 +2,7 @@
 #
 # Copyright 2024 Michael Hucka.
 # License: MIT License – see file "LICENSE" in the project website.
-# Website: https://github.com/mhucka/mac-scripts
+# Website: https://github.com/mhucka/devonthink-hacks
 
 # Default interpretation of files, in case people don't have core.autocrlf set.
 # .............................................................................
