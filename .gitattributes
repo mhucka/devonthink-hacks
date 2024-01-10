@@ -1,44 +1,69 @@
-# Repository-specific file attribute associations for git.
+# Summary: repository-specific file attributes assignments for git.
 #
 # Copyright 2024 Michael Hucka.
 # License: MIT License – see file "LICENSE" in the project website.
-# Website: https://github.com/mhucka/devonthink-hacks
+# Website: https://github.com/mhucka/template
 
-# Default interpretation of files, in case people don't have core.autocrlf set.
-# .............................................................................
+# Set default interpretation of line endings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * text=auto
 
-# Common text files that should be normalized.
-# .............................................................................
+# Interpretation of common text files ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*.py text
-*.in text
-*.rst text
-*.cfg text
-*.ini text
-*.yml text
-*.json text
-*.bat text
-*.sh text
-LICENSE text
+*.bat	text eol=crlf
+*.cff	text
+*.cfg	text
+*.css	text diff=css
+*.env	text
+*.html	text diff=html
+*.ini	text
+*.ipynb	text eol=lf
+*.js	text
+*.json	text
+*.md	text diff=markdown
+*.py	text diff=python
+*.rst	text
+*.sh	text
+*.sql	text
+*.svg	text
+*.toml	text
+*.tex	text diff=tex
+*.txt	text
+*.yaml	text merge=yaml
+*.yml	text merge=yaml
 
-# Common files that are truly binary and should not be modified.
-# .............................................................................
+# RC files like .babelrc, .eslintrc, etc.
+*.*rc	text
 
-*.png binary
-*.jpg binary
-*.xls binary
-*.doc binary
+# This avoids compatibility issues between Windows and Mac.
+*.csv	text eol=crlf
 
-# Special case for CSV. We've had problems with git getting confused about
-# CSV line endings when both Windows & Mac users edited the same files.
-# .............................................................................
+LICENSE		text
+Makefile	text
 
-*.csv binary diff=csv
+*.*ignore	text
+*.gitattributes	text
+.gitconfig	text
 
-# AppleScript.
-# .............................................................................
+# Interpretation of common binary files ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*.scpt diff=scpt
-*.scpt filter=ascr
+*.bz	binary
+*.DOC	binary
+*.doc	binary
+*.DOCX	binary
+*.docx	binary
+*.DOT	binary
+*.dot	binary
+*.gz	binary
+*.jpeg	binary
+*.jpg	binary
+*.PDF	binary
+*.pdf	binary
+*.RTF	binary
+*.rtf	binary
+*.tar	binary
+*.tgz	binary
+*.tif	binary
+*.tiff	binary
+*.xls	binary
+*.zip	binary
