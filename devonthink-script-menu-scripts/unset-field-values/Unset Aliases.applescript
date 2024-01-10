@@ -1,4 +1,4 @@
--- Unset the Aliases field value of select records.
+-- Summary: unset the Aliases field value of select records.
 --
 -- Copyright 2024 Michael Hucka.
 -- License: MIT License – see file "LICENSE" in the project website.

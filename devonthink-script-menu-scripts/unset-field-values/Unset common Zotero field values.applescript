@@ -1,4 +1,10 @@
--- Unset record fields I use in conjunction with Zotero.
+-- Summary: unset record fields I use in conjunction with Zotero.
+--
+-- ╭───────────────────────────── WARNING ─────────────────────────────╮
+-- │ This assumes custom metadata fields that I set in my copy of      │
+-- │ DEVONthink. It will almost certainly not work in anyone else's    │
+-- │ copy of DEVONthink.                                               │
+-- ╰───────────────────────────────────────────────────────────────────╯
 --
 -- Copyright 2024 Michael Hucka.
 -- License: MIT License – see file "LICENSE" in the project website.

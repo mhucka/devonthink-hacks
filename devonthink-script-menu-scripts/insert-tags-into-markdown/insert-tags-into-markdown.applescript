@@ -1,4 +1,4 @@
--- Find a line that begins with "tags:" & append document tags
+-- Summary: find a line that begins with "tags:" & append document tags.
 --
 -- This code is based on code posted by Christian Grunenberg to a
 -- DEVONthink forum in April 2020 at

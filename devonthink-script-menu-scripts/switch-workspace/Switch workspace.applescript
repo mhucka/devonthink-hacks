@@ -1,4 +1,4 @@
--- Save the current workspace config and switch to anotehr
+-- Summary: save the current workspace config and switch to another.
 --
 -- The original version of this code was sent to me by Jim Neumann of
 -- DEVONtechnologies via email on 2022-10-13 in response to my request

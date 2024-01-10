@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Print the current values of all DEVONthink hidden preferences.
+# Summary: print the current values of all DEVONthink hidden preferences.
 #
 # Warning: this contains an explicit list of hidden preferences that were
 # documented as of version 3.9.4 of DEVONthink in the DEVONthink user manual.

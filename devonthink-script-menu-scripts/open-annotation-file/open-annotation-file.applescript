@@ -1,4 +1,4 @@
--- Open the annotation file associated with the selected document
+-- Summary: open annotation file associated w/ selected document.
 --
 -- Copyright 2024 Michael Hucka.
 -- License: MIT License – see file "LICENSE" in the project website.

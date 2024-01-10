@@ -1,4 +1,4 @@
--- Set the icon of a selected group to that of its parent group
+-- Summary: set the icon of a selected group to that of its parent group.
 --
 -- Copyright 2024 Michael Hucka.
 -- License: MIT License – see file "LICENSE" in the project website.

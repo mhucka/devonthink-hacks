@@ -1,4 +1,4 @@
--- Create a doc from a template file and perform keyword substitution.
+-- Summary: create a doc from a template file, then substitute keywords.
 --
 -- Copyright 2024 Michael Hucka.
 -- License: MIT License – see file "LICENSE" in the project website.
