@@ -48,7 +48,6 @@
   "copyrightYear": 2024,
   "license": "https://github.com/mhucka/devonthink-hacks/blob/master/LICENSE",
   "isAccessibleForFree": true,
-  "url": "",
   "codeRepository": "https://github.com/mhucka/devonthink-hacks",
   "readme": "https://github.com/mhucka/devonthink-hacks/blob/main/README.md",
   "issueTracker": "https://github.com/mhucka/devonthink-hacks/issues",
@@ -58,9 +57,16 @@
     "command line",
     "macOS",
     "shell",
-    "Bash",
-    "Python",
-    "AppleScript"
+    "AppleScript",
+    "Bash"
+  ],
+  "programmingLanguage": [
+    {
+      "@type": "ComputerLanguage",
+      "name": "AppleScript",
+      "version": "2.8",
+      "url": "https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/"
+    }
   ],
   "developmentStatus": "active"
 }
