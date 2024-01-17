@@ -43,8 +43,7 @@ on getWebPageData()
 	return {status, theURL, theTitle}
 end getWebPageData
 
-
-# Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 tell application "DEVONthink 3" to launch
 
