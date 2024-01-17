@@ -7,8 +7,6 @@
 use AppleScript version "2.4" -- Yosemite (10.10) or later
 use scripting additions
 
-set the clipboard to ""
-
 tell application id "DNtp"
 	try
 		set paths to ""
