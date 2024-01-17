@@ -46,12 +46,12 @@
     }
   ],
   "copyrightYear": 2024,
-  "license": "https://github.com/mhucka/devonthink-hacks/blob/master/LICENSE",
+  "license": "https://github.com/mhucka/devonthink-hacks/blob/main/LICENSE",
   "isAccessibleForFree": true,
   "codeRepository": "https://github.com/mhucka/devonthink-hacks",
   "readme": "https://github.com/mhucka/devonthink-hacks/blob/main/README.md",
   "issueTracker": "https://github.com/mhucka/devonthink-hacks/issues",
-  "downloadUrl": "https://github.com/mhucka/devonthink-hacks/archive/master.zip",
+  "downloadUrl": "https://github.com/mhucka/devonthink-hacks/archive/main.zip",
   "keywords": [
     "software",
     "command line",
