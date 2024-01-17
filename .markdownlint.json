@@ -1,0 +1,31 @@
+{
+  "blank_lines": {
+    "maximum": 2
+  },
+  "html": {
+    "allowed_elements": [
+      "a",
+      "b",
+      "br",
+      "code",
+      "details",
+      "div",
+      "em",
+      "i",
+      "img",
+      "ins",
+      "kbd",
+      "p",
+      "span",
+      "sup",
+      "summary"
+    ]
+  },
+  "line-length": {
+    "line_length": 10000
+  },
+  "no-alt-text": true,
+  "no-duplicate-heading": {
+    "allow_different_nesting": true
+  }
+}
