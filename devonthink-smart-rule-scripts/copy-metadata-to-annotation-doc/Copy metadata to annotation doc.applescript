@@ -30,6 +30,7 @@ on copy_meta(source_record, annotation_record)
 			set tags to tags of source_record
 			set URL to reference URL of source_record
 			set rating to rating of source_record
+			set label to label of source_record
 			repeat with _field in custom_fields
 				set value to get custom meta data for _field from source_record
 				add custom meta data value for _field to annotation_record
