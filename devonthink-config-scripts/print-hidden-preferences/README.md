@@ -1,8 +1,8 @@
 # Config hidden preferences
 
-These are quick shell scripts I use to set the hidden preferences to my liking, for installing DEVONthink on a new machine. The script outputs the values in a way that makes it possible to take that output and run it as a script to set the values:
+This is a simple shell script I use to both print and set DEVONthink hidden preferences, for installing DEVONthink on a new machine. The script is designed to output the values in a way that makes it possible to take the output and run it as a shell script to set the values. Example:
 
-```
+```sh
 # Get the values on one machine
 ./print-devonthink-preferences > prefs.sh
 
