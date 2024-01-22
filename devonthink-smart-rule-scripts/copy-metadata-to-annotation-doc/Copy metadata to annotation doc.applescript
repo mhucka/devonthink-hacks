@@ -48,8 +48,8 @@ on performSmartRule(selected_records)
 			-- need to get the thing they're annotating.
 			repeat with _incoming in incoming references of this_record
 				if (exists annotation of _incoming) then
-					set incoming_annot to get annotation of _incoming
-					if uuid of incoming_annot = uuid of this_record then
+					set other_annot to get annotation of _incoming
+					if uuid of other_annot = uuid of this_record then
 						my copy_meta(_incoming, this_record)
 					end if
 				end if
