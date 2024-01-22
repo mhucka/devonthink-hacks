@@ -3,7 +3,7 @@
 DEVONthink 3 has a mechanism that allows you to create a document that stores comments and other content about _another_ document. In DEVONthink, this is called an "annotation file" or sometimes just "annotation" (not to be confused with other kinds of annotations, such as annotations in PDF files). The facility is accessed from the _Annotations & Reminders_ inspector panel, via a drop-down menu accessible by clicking on _Annotations ▾_ in the lower half.
 
 <p align="center">
-    <img align="center" width="300px" src="https://github.com/mhucka/devonthink-hacks/blob/main/open-annotation-file/annotations-drop-down.png">
+    <img align="center" width="300px" src="./annotations-drop-down.png">
 <p>
 
 Editing annotations is much more conveniently done in a separate window. If a document has an annotation file associated with it, the "Open" command is available in the pull-down menu (as shown above). I wanted to have a keyboard shortcut to open annotation files in separate windows, but unfortunately, DEVONthink does not provide a keyboard shortcut for this command; more unfortunately, you can't target this command via macOS's built-in shortcuts facility, and I haven't found a way to invoke it directly via [Keyboard Maestro](https://www.keyboardmaestro.com/main/).
