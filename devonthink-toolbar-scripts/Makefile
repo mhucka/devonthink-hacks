@@ -73,11 +73,13 @@ help:
 
 icon.png: icon.svg
 	yq -p xml -o xml 'del(.svg.text)' icon.svg > cleaned.svg
-	sed 's/#000000/#7fc43b/' < cleaned.svg > gray.svg
-	convert -trim -size "400x400>" gray.svg gray.png
+	sed 's/#000000/#7fc43b/' < cleaned.svg > green.svg
+	convert -trim -size "400x400>" green.svg green.png
 	convert -background white -gravity center -extent 512x512 \
-	    -alpha remove -alpha off gray.png icon.png
-	rm -f cleaned.svg gray.svg gray.png
+	    -alpha remove -alpha off green.png tmp.png
+	convert -fuzz 25% -fill "#7fc43b" -opaque "#000000" tmp.png green.png
+	convert green.png -fuzz 10% -transparent white icon.png
+	rm -f cleaned.svg green.svg green.png tmp.png
 
 
 # Compile source files ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
