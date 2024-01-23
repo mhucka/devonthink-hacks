@@ -1,4 +1,4 @@
-# My generic Makefile for compiling AppleScript files.
+# Summary: my generic Makefile for compiling AppleScript files.
 #
 # Copyright 2024 Michael Hucka.
 # License: MIT License – see file "LICENSE" in the project website.
@@ -20,6 +20,24 @@ ifeq ($(origin INSIDE_EMACS),environment)
 $(error "Do not run make from inside Emacs with this Makefile.")
 endif
 
+# This Makefile uses syntax that needs at least GNU Make version 3.82.
+# The following test is based on the approach posted by Eldar Abusalimov to
+# Stack Overflow in 2012 at https://stackoverflow.com/a/12231321/743730
+
+ifeq ($(filter undefine,$(value .FEATURES)),)
+$(error Unsupported version of Make. \
+    This Makefile does not work properly with GNU Make $(MAKE_VERSION); \
+    it needs GNU Make version 3.82 or later)
+endif
+
+# Before we go any further, test if certain programs are available.
+# The following is based on the approach posted by Jonathan Ben-Avraham to
+# Stack Overflow in 2014 at https://stackoverflow.com/a/25668869
+
+programs_needed = osacompile yq fileicon
+TEST := $(foreach p,$(programs_needed),\
+	  $(if $(shell which $(p)),_,$(error Cannot find program "$(p)")))
+
 
 # Print help if no command is given ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -37,6 +55,29 @@ help:
 	| sed 'N;s/\n/###/' \
 	| sed -n 's/^#: \(.*\)###\([a-zA-Z0-9_-]*\):.*/$(color)\2$(reset):###\1/p' \
 	| column -t -s '###'
+
+# Create icon file ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# This assumes the file is an SVG file from Noun Project. The steps here are:
+#
+# 1. Filter the SVG file to remove the text. Yes, this removes the author and
+#    source attributions, but I think that's okay because (a) this is for my
+#    personal use on my own computer -- I'm not distributing the result -- and
+#    (b) I attribute the icon author in the README.md file in this directory.
+# 2. Filter the SVG file to change the color from black to a green-gray, so
+#    that when they're added to the toolbar, I can tell which icons are mine.
+# 3. Convert SVG to PNG.
+# 4. Add some whitespace padding around the icon, based on the proportions of
+#    that I see in icons in DEVONthink (vers. 3.9.4 on macOS 10.13.6).
+# 5. Turn white background to transparent.
+
+icon.png: icon.svg
+	yq -p xml -o xml 'del(.svg.text)' icon.svg > cleaned.svg
+	sed 's/#000000/#7fc43b/' < cleaned.svg > gray.svg
+	convert -trim -size "400x400>" gray.svg gray.png
+	convert -background white -gravity center -extent 512x512 \
+	    -alpha remove -alpha off gray.png icon.png
+	rm -f cleaned.svg gray.svg gray.png
 
 
 # Compile source files ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,29 +121,38 @@ q2s = $(subst ?, $(space),$1)
 # satisfies the %.scpt rule above.
 
 #: Compile the AppleScript files in this directory.
-compile: $(sources:.applescript=.scpt)
+compile: $(sources:.applescript=.scpt) icon.png
+	fileicon set "$(call q2s,$<)" icon.png
 
 
 # Install binaries ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# The /Menu location is to add items to the "Scripts" menu that appears in some
+# DEVONthink windows such as group/folder lists. The /Toolbar location is for
+# making scripts available in the menubar of document windows. For the latter,
+# you need to quit and relaunch DEVONthink because the items are cached.
+
 # Note the use of ? in the directory name below, instead of the space character
 # (i.e. ~/Library/Application Scripts/com.devon-technologies.think3/Menu).
 
-destdir = "$(HOME)/Library/Application?Scripts/com.devon-technologies.think3/Menu"
+destdir1 = "$(HOME)/Library/Application?Scripts/com.devon-technologies.think3/Menu"
+destdir2 = "$(HOME)/Library/Application?Scripts/com.devon-technologies.think3/Toolbar"
 
 .SECONDEXPANSION:
 $(destdir)/%.scpt: $$(subst $$(space),\$$(space),%).applescript
-	install -bpS "$(call q2s,$*.scpt)" $(call q2s,$(destdir))
+	install -bpS "$(call q2s,$*.scpt)" $(call q2s,$(destdir1))
+	install -bpS "$(call q2s,$*.scpt)" $(call q2s,$(destdir2))
 
 #: Install the compiled scripts in DEVONthink's script directory.
 install: $(addprefix $(destdir)/,$(sources:.applescript=.scpt))
+	@echo "$(bright)Restart DEVONthink to use additions to the Toolbar.$(reset)"
 
 
 # Cleanup ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #: Clean this directory.
 clean:
-	rm -rf *.scpt
+	rm -rf *.scpt *.png
 	@echo ✨ Cleaned! ✨
 
 
