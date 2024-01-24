@@ -1,6 +1,6 @@
-# Copy absolute paths of selected items
+# Copy location paths of selected items
 
-For each item selected in the frontmost window of DEVONthink, this copies to the clipboard a link to the absolute path in the DEVONthink database. The paths will have the form `/path/to/the/item.md`.
+For each item selected in the frontmost window of DEVONthink, this copies to the clipboard a link to the absolute path to the item in the DEVONthink database. This is a concatenation of the "location" property value and the document name. The result is a string that looks like, for example, `/path/to/the/itemname.md`.
 
 ## Compilation and installation
 
