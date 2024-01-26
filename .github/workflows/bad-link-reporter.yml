@@ -1,0 +1,50 @@
+# Summary: workflow to run Baler.
+#
+# Copyright 2024 Michael Hucka.
+# License: MIT license – see file "LICENSE" in the project website.
+# Website: https://github.com/mhucka/devonthink-hacks
+
+name: Bad Link Reporter
+
+# Configure this section ─────────────────────────────────────────────
+
+env:
+  # Files examined by the workflow:
+  files: '*.md'
+
+  # Label assigned to issues created by this workflow:
+  labels: bug
+
+  # Number of previous issues to check for duplicate reports.
+  lookback: 10
+
+  # Time (sec) to wait on an unresponsive URL before trying once more.
+  timeout: 15
+
+  # Optional file containing a list of URLs to ignore, one per line:
+  ignore: .github/workflows/ignored-urls.txt
+
+on:
+  schedule:  # Cron syntax is: "min hr day-of-month month day-of-week"
+    - cron: 00 04 * * 1
+  push:
+    paths: ['**.md']
+  workflow_dispatch:
+
+# The rest of this file should be left as-is ─────────────────────────
+
+run-name: Test links in Markdown files
+jobs:
+  Baler:
+    name: Link checker and reporter
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: caltechlibrary/baler@v2
+        with:
+          files:    ${{github.event.inputs.files    || env.files}}
+          labels:   ${{github.event.inputs.labels   || env.labels}}
+          ignore:   ${{github.event.inputs.ignore   || env.ignore}}
+          timeout:  ${{github.event.inputs.timeout  || env.timeout}}
+          lookback: ${{github.event.inputs.lookback || env.lookback}}
