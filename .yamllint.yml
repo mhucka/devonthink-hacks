@@ -1,0 +1,15 @@
+# Summary: configuration file for .github/workflows/yaml-linter.yml.
+#
+# Copyright 2024 California Institute of Technology.
+# License: Modified BSD 3-clause – see file "LICENSE" in the project website.
+# Website: https://github.com/caltechlibrary/baler
+
+rules:
+  colons:
+    max-spaces-after: -1
+  quoted-strings:
+    required: only-when-needed
+  document-start:
+      present: false
+  document-end:
+      present: false
