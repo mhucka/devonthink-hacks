@@ -7,8 +7,7 @@ These are scripts and programs I developed to work with [DEVONthink](https://www
 [![AppleScript](https://img.shields.io/badge/AppleScript-green.svg?style=flat-square)](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html)
 
 
-Table of contents
------------------
+## Table of contents
 
 * [Introduction](#introduction)
 * [Installation and usage](#installation-and-usage)
