@@ -23,7 +23,6 @@ property bbt_api_url: "http://localhost:23119/better-bibtex/json-rpc"
 -- Approximate duration to wait for Zotero + BBT to start, in seconds.
 property wait_time: 15
 
-
 -- Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -- The following code is based in part on a 2019-04-03 posting by Shane Stanley
@@ -45,7 +44,6 @@ on ping(api_url, max_time)
 	-- No error object => connected.
 	return (err is missing value)
 end ping
-
 
 -- Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
