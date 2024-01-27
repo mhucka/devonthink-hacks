@@ -25,13 +25,13 @@ property wait_time: 15
 
 -- Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--- The following code is based in part on a 2019-04-03 posting by Shane Stanley
--- to MacScripters.net at https://www.macscripter.net/t/nsurl-oddity/71558/3
-
-on ping(api_url, max_time)
-	-- Create the request object.
+-- Return true if can connect to the given endpoint URL in < max_time seconds.
+-- (This code is based in part on a 2019-04-03 posting by Shane Stanley to
+-- MacScripters.net at https://www.macscripter.net/t/nsurl-oddity/71558/3)
+on ping(endpoint, max_time)
+	-- Create the request object with a timeout.
 	set ca to current application
-	set url_string to ca's |NSURL|'s URLWithString:api_url
+	set url_string to ca's |NSURL|'s URLWithString:endpoint
 	set ignore_cache to ca's NSURLRequestReloadIgnoringCacheData
 	set request to ca's NSURLRequest's alloc()'s initWithURL:url_string ¬
 		cachePolicy:(ignore_cache) timeoutInterval:max_time
@@ -41,7 +41,7 @@ on ping(api_url, max_time)
 		sendSynchronousRequest:request ¬
 			returningResponse:(reference) |error|:(reference)
 	
-	-- No error object => connected.
+	-- No error object => connected (return true).
 	return (err is missing value)
 end ping
 
