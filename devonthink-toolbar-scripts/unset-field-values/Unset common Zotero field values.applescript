@@ -23,6 +23,7 @@ tell application id "DNtp"
 			add custom meta data "" for "type" to _record
 			add custom meta data "" for "citekey" to _record
 			add custom meta data "" for "abstract" to _record
+			add custom meta data "" for "reference" to _record
 		end repeat
 	on error msg number code
 		if the code is not -128 then
