@@ -1,13 +1,13 @@
 -- Summary: set the "Reference" field of a record using Zotero and BBT.
 --
--- This is an AppleScript fragment that will only work as the script executed
--- by a Smart Rule in DEVONthink. It assumes that the Smart Rule searches the
--- indexed folder of a Zotero storage folder containing the attachments of a
--- Zotero database. It also assumes that those DEVONthink records have been
--- already processed using a combination of Zowie and other Smart Rules, such
--- that each record has a value for a custom metadata field named "Citekey".
--- Finally, it also assumes that the Better BibTeX plugin has been installed
--- (https://retorque.re/zotero-better-bibtex/) and it's running.
+-- This AppleScript program is meant to be invoked by a Smart Rule in
+-- DEVONthink. It assumes that the Smart Rule searches the indexed folder of a
+-- Zotero storage folder containing the attachments of a Zotero database. It
+-- also assumes that those DEVONthink records have been already processed using
+-- a combination of Zowie and other Smart Rules, such that each record has a
+-- value for a custom metadata field named "Citekey". Finally, it also assumes
+-- that the Better BibTeX plugin (https://retorque.re/zotero-better-bibtex/)
+-- has been installed and it's running.
 --
 -- ╭───────────────────────────── WARNING ─────────────────────────────╮
 -- │ This assumes custom metadata fields that I set in my copy of      │
@@ -31,10 +31,10 @@ property bbt_rpc_endpoint: "http://localhost:23119/better-bibtex/json-rpc"
 -- Max duration to wait for a response from BBT.
 property wait_time: 15
 
--- Name used for the custom field holding the cite key in DEVONthink records.
+-- Identifier of the custom field holding the cite key in DEVONthink records.
 property key_field: "citekey"
 
--- Name used for the custom field holding the formatted reference.
+-- Identifier of the custom field holding the formatted reference.
 property reference_field: "reference"
 
 
@@ -220,3 +220,10 @@ on performSmartRule(selectedRecords)
 		end try
 	end tell
 end performSmartRule
+
+-- Scaffolding for execution outside of a Smart Rule (e.g., in a debugger).
+tell application id "DNtp"
+	local selected_records
+	set selected_records to the selection as list
+	my performSmartRule(selected_records)
+end tell
