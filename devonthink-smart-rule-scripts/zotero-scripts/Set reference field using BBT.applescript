@@ -20,7 +20,6 @@
 -- Website: https://github.com/mhucka/devonthink-hacks
 
 use AppleScript version "2.5"
-use framework "Foundation"
 use scripting additions
 
 -- Config variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,104 +41,121 @@ property reference_field: "reference"
 
 -- Remove leading and trailing whitespace from the text and return the result.
 on trimmed(raw_text)
-	set ca to current application
-	set text_str to ca's NSString's stringWithString:raw_text
-	set whitespace_chars to ca's NSCharacterSet's whitespaceCharacterSet()
-	return (text_str's stringByTrimmingCharactersInSet:whitespace_chars) as text
+	script wrapperScript
+		property ca: a reference to current application
+		use framework "Foundation"
+		on trimmed(raw_text)
+			set str to ca's NSString's stringWithString:raw_text
+			set whitespace to ca's NSCharacterSet's whitespaceCharacterSet()
+			return (str's stringByTrimmingCharactersInSet:whitespace) as text
+		end trimmed
+	end script
+	return wrapperScript's trimmed(raw_text)
 end trimmed
 
--- Do an HTTP post to an endpoint & return the result as an AppleScript record.
+-- Do HTTP post to an endpoint & return the result as an (AppleScript) record.
 -- Parameters headers and json_record must be AppleScript records too.
 on http_post(endpoint, headers, json_record)
-	local ca, url_string, ignore_cache, request_alloc, request
-	set ca to current application
-	-- Construct the HTTP request object.
-	set url_string to ca's NSURL's URLWithString:endpoint
-	set ignore_cache to ca's NSURLRequestReloadIgnoringCacheData
-	set request_alloc to ca's NSMutableURLRequest's alloc()
-	set request to request_alloc's initWithURL:url_string ¬
-		cachePolicy:(ignore_cache) timeoutInterval:wait_time
-
-	-- Set the HTTP headers.
-	local header_dict, value
-	set header_dict to ca's NSDictionary's dictionaryWithDictionary:headers
-	repeat with header in header_dict's allKeys()
-		set value to (header_dict's valueForKey:header) as text	
-		request's setValue:value forHTTPHeaderField:header
-	end repeat
-
-	-- Serialize the JSON data record and set it as the body of the post.
-	local post_dict, payload, err
-	set post_dict to ca's NSDictionary's dictionaryWithDictionary:json_record
-	set {payload, err} to ca's NSJSONSerialization's ¬
-		dataWithJSONObject:post_dict options:0 |error|:(reference)
-	if not err is missing value then
-		log "Problem attempting to encode payload for " & endpoint & ": " & ¬
-			err's localizedDescription() as text
-		return missing value
-	end if
-	request's setHTTPBody:payload
-	request's setHTTPMethod:"POST"
-
-	-- Tell the request object to do its thing.
-	local returned_data, response, err
-	set {returned_data, response, err} to ca's NSURLConnection's ¬
-		sendSynchronousRequest:request ¬
-			returningResponse:(reference) |error|:(reference)
-	if not err is missing value then
-		log "Error attempting to connect to " & endpoint & ": " & ¬
-			(err's localizedDescription() as text)
-		return missing value
-	else if response's statusCode() >= 400 then
-		local code
-		set code to response's statusCode()
-		log "Connection failure (HTTP code " & code & ") for " & endpoint
-		return missing value
-	else if returned_data is missing value then
-		log "Empty response from " & endpoint
-		return missing value
-	end if
-
-	-- Pull the data out of the response object and return it as a record.
-	local utf8, data_str, converted, result_data, json_dict
-	set utf8 to ca's NSUTF8StringEncoding
-	set data_str to ca's NSString's alloc()'s ¬
-		initWithData:(contents of returned_data) encoding:utf8
-	set converted to ca's NSString's stringWithString:data_str
-	set result_data to converted's dataUsingEncoding:utf8
-	set {json_dict, err} to ca's NSJSONSerialization's ¬
-		JSONObjectWithData:result_data options:0 |error|:(reference)
-	if json_dict is missing value then
-		log "Could not parse returned result as JSON from " & endpoint
-		return missing value
-	else
-		return item 1 of (parent's NSArray's arrayWithObject:json_dict)
-	end if
+	script wrapperScript
+		property ca: a reference to current application
+		use framework "Foundation"
+		on http_post(endpoint, headers, json_record)
+			local url_string, ignore_cache, request_alloc, request
+			-- Construct the HTTP request object.
+			set url_string to ca's NSURL's URLWithString:endpoint
+			set ignore_cache to ca's NSURLRequestReloadIgnoringCacheData
+			set request_alloc to ca's NSMutableURLRequest's alloc()
+			set request to request_alloc's initWithURL:url_string ¬
+				cachePolicy:(ignore_cache) timeoutInterval:wait_time
+		
+			-- Set the HTTP headers.
+			local hdict, value
+			set hdict to ca's NSDictionary's dictionaryWithDictionary:headers
+			repeat with header in hdict's allKeys()
+				set value to (hdict's valueForKey:header) as text	
+				request's setValue:value forHTTPHeaderField:header
+			end repeat
+		
+			-- Serialize the JSON data record & set it as the body of the post.
+			local jdict, payload, err
+			set jdict to ca's NSDictionary's dictionaryWithDictionary:json_record
+			set {payload, err} to ca's NSJSONSerialization's ¬
+				dataWithJSONObject:jdict options:0 |error|:(reference)
+			if not err is missing value then
+				log "Problem attempting to encode payload for " & endpoint & ¬
+					": " & err's localizedDescription() as text
+				return missing value
+			end if
+			request's setHTTPBody:payload
+			request's setHTTPMethod:"POST"
+		
+			-- Tell the request object to do its thing.
+			local returned_data, response, err
+			set {returned_data, response, err} to ca's NSURLConnection's ¬
+				sendSynchronousRequest:request ¬
+					returningResponse:(reference) |error|:(reference)
+			if not err is missing value then
+				log "Error attempting to connect to " & endpoint & ": " & ¬
+					(err's localizedDescription() as text)
+				return missing value
+			else if response's statusCode() >= 400 then
+				set code to response's statusCode()
+				log "Connection failure (HTTP code " & code & ") for " & endpoint
+				return missing value
+			else if returned_data is missing value then
+				log "Empty response from " & endpoint
+				return missing value
+			end if
+		
+			-- Pull data out of the response object, return it as an AS record.
+			local utf8, data_str, converted, result_data, json_dict
+			set utf8 to ca's NSUTF8StringEncoding
+			set data_str to ca's NSString's alloc()'s ¬
+				initWithData:(contents of returned_data) encoding:utf8
+			set converted to ca's NSString's stringWithString:data_str
+			set result_data to converted's dataUsingEncoding:utf8
+			set {json_dict, err} to ca's NSJSONSerialization's ¬
+				JSONObjectWithData:result_data options:0 |error|:(reference)
+			if json_dict is missing value then
+				log "Could not parse returned result as JSON from " & endpoint
+				return missing value
+			else
+				return item 1 of (parent's NSArray's arrayWithObject:json_dict)
+			end if
+		end http_post
+	end script
+	return wrapperScript's http_post(endpoint, headers, json_record)
 end http_post
 
 -- Look up a cite key in the local BBT server running in Zotero.
 -- Returns a string, or missing value in case the lookup fails.
 on formatted_reference(citekey)
-	local headers, payload, bbt_result
-
-	-- The headers and payload format are documented in the BBT docs at
-	-- https://retorque.re/zotero-better-bibtex/exporting/json-rpc/index.html
-	set headers to {|content-type|: "application/json", ¬
-					accept: "application/json"}
-	set payload to {method: "item.bibliography", ¬
-					params: {{citekey}, ¬
-							 {quickCopy: true, contentType: "text"}}, ¬
-					jsonrpc: "2.0"}
-
-	-- Call the JSON-RPC endpoint and get the JSON record back.
-	set bbt_result to http_post(bbt_rpc_endpoint, headers, payload)
-
-	-- If successful, the formatted content will be in the field "result".
-	if bbt_result is not missing value then
-		return trimmed(bbt_result's valueForKey:"result") as string
-	else
-		return missing value
-	end if
+	script wrapperScript
+		property ca: a reference to current application
+		use framework "Foundation"
+		on formatted_reference(citekey)
+			local headers, payload, bbt_result
+			-- The headers and payload format are documented in the BBT docs at
+			-- https://retorque.re/zotero-better-bibtex/exporting/json-rpc/index.html
+			set headers to {|content-type|: "application/json", ¬
+							accept: "application/json"}
+			set payload to {method: "item.bibliography", ¬
+							params: {{citekey}, ¬
+									 {quickCopy: true, contentType: "text"}}, ¬
+							jsonrpc: "2.0"}
+		
+			-- Call the JSON-RPC endpoint and get the JSON record back.
+			set bbt_result to http_post(bbt_rpc_endpoint, headers, payload)
+		
+			-- The formatted content will be in the record field "result".
+			if bbt_result is not missing value then
+				return trimmed(bbt_result's valueForKey:"result") as string
+			else
+				return missing value
+			end if
+		end formatted_reference
+	end script
+	return wrapperScript's formatted_reference(citekey)
 end formatted_reference
 
 
@@ -202,7 +218,7 @@ on performSmartRule(selectedRecords)
 		try
 			-- Using the selectedRecords argument in the next line results in
 			-- runtime object class errors. The following alternative works.
-			repeat with _record in (selected records) as list
+			repeat with _record in selectedRecords
 				local recname, citekey, val
 				set recname to name of _record
 				set citekey to get custom meta data for key_field from _record
@@ -227,7 +243,5 @@ end performSmartRule
 
 -- Scaffolding for execution outside of a Smart Rule (e.g., in a debugger).
 tell application id "DNtp"
-	local selected_records
-	set selected_records to the selection as list
-	my performSmartRule(selected_records)
+	my performSmartRule(selection as list)
 end tell
