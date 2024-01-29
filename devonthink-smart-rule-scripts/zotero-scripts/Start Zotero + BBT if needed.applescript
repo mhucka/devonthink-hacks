@@ -10,7 +10,6 @@
 -- Website: https://github.com/mhucka/devonthink-hacks
 
 use AppleScript version "2.5"
-use framework "Foundation"
 use scripting additions
 
 -- Config variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,27 +27,33 @@ property wait_time: 20
 -- false if there was no response, and an integer HTTP status code if there was
 -- a response but it was an HTTP code indicating a problem.
 on connect_to_bbt(max_time)
-	-- Create the request object with a timeout.
-	set ca to current application
-	set url_string to ca's NSURL's URLWithString:bbt_api_endpoint
-	set ignore_cache to ca's NSURLRequestReloadIgnoringCacheData
-	set request to ca's NSURLRequest's alloc()'s initWithURL:url_string ¬
-		cachePolicy:(ignore_cache) timeoutInterval:max_time
-	
-	-- Try to connect.
-	set {body, response, err} to ca's NSURLConnection's ¬
-		sendSynchronousRequest:request ¬
-			returningResponse:(reference) |error|:(reference)
-	
-	-- Interpret the outcome. No error does not necessarily mean success.
-	if (err is not missing value) or (response is missing value) then
-		return false
-	else if response's statusCode() >= 400 then
-		-- This shouldn't happen. Something is wrong with the endpoint URL.
-		return response's statusCode()
-	else
-		return true
-	end if
+	script wrapperScript
+		property ca: a reference to current application
+		use framework "Foundation"
+		on connect_to_bbt(max_time)
+			-- Create the request object with a timeout.
+			set url_str to ca's NSURL's URLWithString:bbt_api_endpoint
+			set ignore_cache to ca's NSURLRequestReloadIgnoringCacheData
+			set request to ca's NSURLRequest's alloc()'s initWithURL:url_str ¬
+				cachePolicy:(ignore_cache) timeoutInterval:max_time
+			
+			-- Try to connect.
+			set {body, response, err} to ca's NSURLConnection's ¬
+				sendSynchronousRequest:request ¬
+					returningResponse:(reference) |error|:(reference)
+			
+			-- Interpret the outcome. No err doesn't necessarily mean success.
+			if (err is not missing value) or (response is missing value) then
+				return false
+			else if response's statusCode() >= 400 then
+				-- This shouldn't happen. Something is wrong with the endpoint.
+				return response's statusCode()
+			else
+				return true
+			end if
+		end connect_to_bbt
+	end script
+	return wrapperScript's connect_to_bbt(max_time)
 end connect_to_bbt
 
 
@@ -65,7 +70,6 @@ on performSmartRule(selected_records)
 			-- Wait until we can connect to the JSON-RPC endpoint. Note: it's
 			-- okay to modify wait_time directly b/c every execution of this
 			-- script from a Smart Rule will reload the file and thus reset it.
-			local logged_error, bbt_connection
 			set logged_error to false
 			repeat while wait_time > 0
 				set bbt_connection to my connect_to_bbt(1)
@@ -87,7 +91,5 @@ end performSmartRule
 
 -- Scaffolding for execution outside of a Smart Rule (e.g., in a debugger).
 tell application id "DNtp"
-	local selected_records
-	set selected_records to the selection as list
-	my performSmartRule(selected_records)
+	my performSmartRule(selection as list)
 end tell
