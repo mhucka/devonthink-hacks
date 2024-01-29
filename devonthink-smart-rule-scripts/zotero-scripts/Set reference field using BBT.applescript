@@ -60,7 +60,6 @@ on http_post(endpoint, headers, json_record)
 		property ca: a reference to current application
 		use framework "Foundation"
 		on http_post(endpoint, headers, json_record)
-			local url_string, ignore_cache, request_alloc, request
 			-- Construct the HTTP request object.
 			set url_string to ca's NSURL's URLWithString:endpoint
 			set ignore_cache to ca's NSURLRequestReloadIgnoringCacheData
@@ -69,7 +68,6 @@ on http_post(endpoint, headers, json_record)
 				cachePolicy:(ignore_cache) timeoutInterval:wait_time
 		
 			-- Set the HTTP headers.
-			local hdict, value
 			set hdict to ca's NSDictionary's dictionaryWithDictionary:headers
 			repeat with header in hdict's allKeys()
 				set value to (hdict's valueForKey:header) as text	
@@ -77,7 +75,6 @@ on http_post(endpoint, headers, json_record)
 			end repeat
 		
 			-- Serialize the JSON data record & set it as the body of the post.
-			local jdict, payload, err
 			set jdict to ca's NSDictionary's dictionaryWithDictionary:json_record
 			set {payload, err} to ca's NSJSONSerialization's ¬
 				dataWithJSONObject:jdict options:0 |error|:(reference)
@@ -90,7 +87,6 @@ on http_post(endpoint, headers, json_record)
 			request's setHTTPMethod:"POST"
 		
 			-- Tell the request object to do its thing.
-			local returned_data, response, err
 			set {returned_data, response, err} to ca's NSURLConnection's ¬
 				sendSynchronousRequest:request ¬
 					returningResponse:(reference) |error|:(reference)
@@ -108,7 +104,6 @@ on http_post(endpoint, headers, json_record)
 			end if
 		
 			-- Pull data out of the response object, return it as an AS record.
-			local utf8, data_str, converted, result_data, json_dict
 			set utf8 to ca's NSUTF8StringEncoding
 			set data_str to ca's NSString's alloc()'s ¬
 				initWithData:(contents of returned_data) encoding:utf8
@@ -119,40 +114,37 @@ on http_post(endpoint, headers, json_record)
 			if json_dict is missing value then
 				log "Could not parse returned result as JSON from " & endpoint
 				return missing value
-			else
-				return item 1 of (parent's NSArray's arrayWithObject:json_dict)
 			end if
+			return item 1 of (parent's NSArray's arrayWithObject:json_dict)
 		end http_post
 	end script
 	return wrapperScript's http_post(endpoint, headers, json_record)
 end http_post
 
 -- Look up a cite key in the local BBT server running in Zotero.
--- Returns a string, or missing value in case the lookup fails.
+-- Returns a string, or missing value if the lookup fails for any reason.
 on formatted_reference(citekey)
 	script wrapperScript
 		property ca: a reference to current application
 		use framework "Foundation"
 		on formatted_reference(citekey)
-			local headers, payload, bbt_result
-			-- The headers and payload format are documented in the BBT docs at
-			-- https://retorque.re/zotero-better-bibtex/exporting/json-rpc/index.html
+			-- The headers and payload format are documented in the BBT docs
+			-- at https://retorque.re/zotero-better-bibtex/exporting/json-rpc/.
 			set headers to {|content-type|: "application/json", ¬
 							accept: "application/json"}
 			set payload to {method: "item.bibliography", ¬
+							jsonrpc: "2.0", ¬
 							params: {{citekey}, ¬
-									 {quickCopy: true, contentType: "text"}}, ¬
-							jsonrpc: "2.0"}
-		
+									 {quickCopy: true, contentType: "text"}}}
+
 			-- Call the JSON-RPC endpoint and get the JSON record back.
 			set bbt_result to http_post(bbt_rpc_endpoint, headers, payload)
-		
-			-- The formatted content will be in the record field "result".
-			if bbt_result is not missing value then
-				return trimmed(bbt_result's valueForKey:"result") as string
-			else
+			if bbt_result is missing value then
 				return missing value
 			end if
+
+			-- The formatted content will be in the record field "result".
+			return trimmed(bbt_result's valueForKey:"result") as string
 		end formatted_reference
 	end script
 	return wrapperScript's formatted_reference(citekey)
@@ -213,13 +205,10 @@ end formatted_reference
 -- Zotero is updated, nothing in my current DEVONthink setup will detect the
 -- discrepancy. I should find a solution to that some day.
 
-on performSmartRule(selectedRecords)
+on performSmartRule(selected_records)
 	tell application id "DNtp"
 		try
-			-- Using the selectedRecords argument in the next line results in
-			-- runtime object class errors. The following alternative works.
-			repeat with _record in selectedRecords
-				local recname, citekey, val
+			repeat with _record in selected_records
 				set recname to name of _record
 				set citekey to get custom meta data for key_field from _record
 				if citekey ≠ "" then
@@ -230,7 +219,8 @@ on performSmartRule(selectedRecords)
 						log "Could not get reference value for " & recname
 					end if
 				else
-					log "No Citekey value found in record for " & recname
+					log "No " & key_field & " field value found " & ¬
+						"in record for " & recname
 				end if
 			end repeat
 		on error msg number code
