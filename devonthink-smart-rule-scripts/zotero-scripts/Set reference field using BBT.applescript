@@ -49,7 +49,7 @@ on trimmed(raw_text)
 end trimmed
 
 -- Do an HTTP post to an endpoint & return the result as an AppleScript record.
--- Parameters headers and json_record must be records too.
+-- Parameters headers and json_record must be AppleScript records too.
 on http_post(endpoint, headers, json_record)
 	local ca, url_string, ignore_cache, request_alloc, request
 	set ca to current application
@@ -166,32 +166,36 @@ end formatted_reference
 -- DEVONthink setup make use of this field value.
 --
 -- The purpose of the code here is to set the value of this "Reference" field.
--- 
--- Better BibTeX runs a server process that accepts connections from local
--- processes on a Mac. This server has a defined endpoint and uses a custom RPC
--- protocol defined by Better BibTeX. The available methods are described at
--- https://retorque.re/zotero-better-bibtex/exporting/json-rpc/index.html
+--
+-- Better BibTeX uses the Zotero Connector facility, in which Zotero operates
+-- a server listening on local port 23119. Plugins like BBT can register an
+-- endpoint with this server to provide clients with the ability to control
+-- them via a JSON-RPC protocol. The methods offered by BBT are described
+-- at https://retorque.re/zotero-better-bibtex/exporting/json-rpc/index.html
 -- One of the available methods is "item.bibliography", which takes a citekey
 -- string and returns a formatted reference string. The format of the reference
--- string is determined by the user's setting for the Zotero quick copy command
--- in the Zotero preferences. (In my case, I use the American Psychological
--- Assoc.'s APA 7 reference format for references, both because I'm used to it
--- from long ago and because I find it provides the most complete information;
--- regardless, the code here does not care about the actual format being used.)
+-- string is determined by Zotero preferences (not BBT or the client program),
+-- specifically, the user's setting for the Zotero "Quick Copy" command in
+-- the Export section of the Zotero preferences. (In my case, I use the
+-- American Psychological Associations.'s APA 7 reference format for
+-- references, both because I'm used to it from long ago and because I find it
+-- provides the most complete information; however, the code here does not
+-- care about the actual quick copy format the user has selected.)
 --
 -- The code below assumes it is being invoked by a DEVONthink Smart Rule that
--- searches the (DEVONthink) indexed folder of Zotero attachments. Each record
--- in that folder has a "Citekey" field value. The procedure for filling in the
--- formatted reference field value is straightforward:
+-- searches the (DEVONthink) indexed folder of Zotero attachments. As mentioned
+-- above, in my setup, each DEVONthink record in that folder has a "Citekey"
+-- field value. The procedure for filling in the formatted reference field
+-- value is actually quite straightforward:
 --
 --   1. read the record's "Citekey" field value
 --   2. use it in a call on the BBT JSON-RPC endpoint "item.bibliography"
 --   3. save the returned value in the custom metadata field for "Reference"
 --
--- (Note: storing the citekey and formatted reference in DEVONthink is
+-- Note: storing the citekey and formatted reference in DEVONthink is
 -- admittedly a little bit dangerous because if the corresponding item in
 -- Zotero is updated, nothing in my current DEVONthink setup will detect the
--- discrepancy. This should be fixed.)
+-- discrepancy. I should find a solution to that some day.
 
 on performSmartRule(selectedRecords)
 	tell application id "DNtp"
