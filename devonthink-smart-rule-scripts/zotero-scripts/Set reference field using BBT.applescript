@@ -39,7 +39,7 @@ property reference_field: "reference"
 
 -- Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--- Log a message in DEVONthink's log, prepended with the name of this script.
+-- Log a message in DEVONthink's log and include the name of this script.
 on report(error_text)
 	script wrapperScript
 		property ca : a reference to current application
@@ -71,8 +71,8 @@ on trimmed(raw_text)
 		use framework "Foundation"
 		on trimmed(raw_text)
 			set str to ca's NSString's stringWithString:raw_text
-			set whitespace to ca's NSCharacterSet's whitespaceCharacterSet()
-			return (str's stringByTrimmingCharactersInSet:whitespace) as text
+			set whsp to ca's NSCharacterSet's whitespaceAndNewlineCharacterSet()
+			return (str's stringByTrimmingCharactersInSet:whsp) as text
 		end trimmed
 	end script
 	return wrapperScript's trimmed(raw_text)
