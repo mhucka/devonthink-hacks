@@ -23,6 +23,18 @@ property wait_time: 20
 
 -- Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+-- Log a message in DEVONthink's log and include the name of this script.
+on report(error_text)
+	local script_path
+	tell application "System Events"
+		set script_path to POSIX path of (path to me as alias)
+	end tell
+	tell application id "DNtp"
+		log message script_path info error_text
+	end tell
+	log error_text				-- Useful when running in a debugger.
+end report
+
 -- Return true if we connected to the BBT endpoint URL in < max_time seconds,
 -- false if there was no response, and an integer HTTP status code if there was
 -- a response but it was an HTTP code indicating a problem.
@@ -76,15 +88,15 @@ on performSmartRule(selected_records)
 				if bbt_connection is true then
 					return
 				else if (bbt_connection is not false) and not logged_error then
-					log "Unable to connect to the Zotero Connector " & ¬
-						"endpoint for Better BibTeX (HTTP code " & ¬
-						bbt_connection & ") at " & bbt_api_endpoint
+					my report("Unable to connect to the Zotero Connector " ¬
+							  & "endpoint for Better BibTeX (HTTP code " ¬
+							  & bbt_connection & ") at " & bbt_api_endpoint)
 					set logged_error to true
 				end if
 				set wait_time to (wait_time - 1)
 				delay 1
 			end repeat
-			log "Wait time exceeded for starting Zotero and Better BibTeX."
+			my report("Wait time exceeded for starting Zotero & Better BibTeX")
 		end if
 	end tell
 end performSmartRule
