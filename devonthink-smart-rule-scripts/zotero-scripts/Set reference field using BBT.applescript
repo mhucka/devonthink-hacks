@@ -15,6 +15,56 @@
 -- │ copy of DEVONthink.                                               │
 -- ╰───────────────────────────────────────────────────────────────────╯
 --
+-- I define a DEVONthink indexed folder over my Zotero attachments folder. This
+-- results in database entries for every file (mostly PDF files) that I store
+-- in Zotero. In my DEVONthink configuration, I define several custom metadata
+-- fields. One of those custom metadata fields is "Citekey", which I use to
+-- store the BibTeX citation key value of the corresponding Zotero bib entry.
+-- The citation key of each Zotero bibliography item is maintained by the
+-- Zotero plugin Better BibTeX; the value in the DEVONthink record is simply a
+-- copy of what's found in Zotero. The cite key value of the DEVONthink records
+-- is set by a Smart Rule elsewhere in my setup.
+--
+-- Another custom metadata field I use in DEVONthink is "Reference", to store a
+-- formatted reference string generated from the Zotero bib entry. This is just
+-- a text string like "Name, A. (2020). Paper title. Journal, 5(20):41-42."
+-- The purpose of storing a formatted reference string in DEVONthink records is
+-- to make it easier to get *some* kind of formatted reference string easily,
+-- without having to jump to Zotero to get it. Other Smart Rules in my
+-- DEVONthink setup make use of this field value.
+--
+-- The purpose of the code here is to set the value of this "Reference" field.
+--
+-- Better BibTeX uses the Zotero Connector facility, in which Zotero operates
+-- a server listening on local port 23119. Plugins like BBT can register an
+-- endpoint with this server to provide clients with the ability to control
+-- them via a JSON-RPC protocol. The methods offered by BBT are described
+-- at https://retorque.re/zotero-better-bibtex/exporting/json-rpc/index.html
+-- One of the available methods is "item.bibliography", which takes a citekey
+-- string and returns a formatted reference string. The format of the reference
+-- string is determined by Zotero preferences (not BBT or the client program),
+-- specifically, the user's setting for the Zotero "Quick Copy" command in
+-- the Export section of the Zotero preferences. (In my case, I use the
+-- American Psychological Associations.'s APA 7 reference format for
+-- references, both because I'm used to it from long ago and because I find it
+-- provides the most complete information; however, the code here does not
+-- care about the actual quick copy format the user has selected.)
+--
+-- The code below assumes it is being invoked by a DEVONthink Smart Rule that
+-- searches the (DEVONthink) indexed folder of Zotero attachments. As mentioned
+-- above, in my setup, each DEVONthink record in that folder has a "Citekey"
+-- field value. The procedure for filling in the formatted reference field
+-- value is actually quite straightforward:
+--
+--   1. read the record's "Citekey" field value
+--   2. use it in a call on the BBT JSON-RPC endpoint "item.bibliography"
+--   3. save the returned value in the custom metadata field for "Reference"
+--
+-- Note: storing the citekey and formatted reference in DEVONthink is
+-- admittedly a little bit dangerous because if the corresponding item in
+-- Zotero is updated, nothing in my current DEVONthink setup will detect the
+-- discrepancy. I should find a solution to that some day.
+--
 -- Copyright 2024 Michael Hucka.
 -- License: MIT license – see file "LICENSE" in the project website.
 -- Website: https://github.com/mhucka/devonthink-hacks
@@ -41,42 +91,29 @@ property reference_field: "reference"
 
 -- Log a message in DEVONthink's log and include the name of this script.
 on report(error_text)
-	script wrapperScript
-		property ca : a reference to current application
-		use framework "Foundation"
-		on script_filename()
-			tell application "System Events"
-				set my_alias to path to me
-				set file_url to ca's NSURL's fileURLWithPath:(name of my_alias)
-				set fname to file_url's URLByDeletingPathExtension()'s ¬
-					lastPathComponent()
-				return fname as string
-			end tell
-		end script_filename
-		on report(error_text)
-			tell application id "DNtp"
-				log message my script_filename() info error_text
-			end tell
-			-- This one is for environments outside DEVONthink.
-			log error_text
-		end report
-	end script
-	return wrapperScript's report(error_text)
+	local script_path
+	tell application "System Events"
+		set script_path to POSIX path of (path to me as alias)
+	end tell
+	tell application id "DNtp"
+		log message script_path info error_text
+	end tell
+	log error_text				-- Useful when running in a debugger.
 end report
 
 -- Remove leading and trailing whitespace from the text and return the result.
-on trimmed(raw_text)
+on trim(raw_text)
 	script wrapperScript
 		property ca: a reference to current application
 		use framework "Foundation"
-		on trimmed(raw_text)
+		on trim(raw_text)
 			set str to ca's NSString's stringWithString:raw_text
 			set whsp to ca's NSCharacterSet's whitespaceAndNewlineCharacterSet()
 			return (str's stringByTrimmingCharactersInSet:whsp) as text
-		end trimmed
+		end trim
 	end script
-	return wrapperScript's trimmed(raw_text)
-end trimmed
+	return wrapperScript's trim(raw_text)
+end trim
 
 -- Do HTTP post to an endpoint & return the result as an (AppleScript) record.
 -- Parameters headers and json_record must be AppleScript records too.
@@ -149,11 +186,11 @@ end http_post
 
 -- Look up a cite key in the local BBT server running in Zotero.
 -- Returns a string, or missing value if the lookup fails for any reason.
-on formatted_reference(citekey)
+on get_formatted_reference(citekey)
 	script wrapperScript
 		property ca: a reference to current application
 		use framework "Foundation"
-		on formatted_reference(citekey)
+		on get_formatted_reference(citekey)
 			-- The headers and payload format are documented in the BBT docs
 			-- at https://retorque.re/zotero-better-bibtex/exporting/json-rpc/.
 			set headers to {|content-type|: "application/json", ¬
@@ -170,94 +207,50 @@ on formatted_reference(citekey)
 			end if
 
 			-- The formatted content will be in the record field "result".
-			return trimmed(bbt_result's valueForKey:"result") as string
-		end formatted_reference
+			return trim(bbt_result's valueForKey:"result") as string
+		end get_formatted_reference
 	end script
-	return wrapperScript's formatted_reference(citekey)
-end formatted_reference
+	return wrapperScript's get_formatted_reference(citekey)
+end get_formatted_reference
 
+-- Set the reference field of the given DEVONthink record.
+on set_reference_field(rec)
+	tell application id "DNtp"
+		set recname to name of rec
+		set citekey to get custom meta data for key_field from rec
+		if citekey ≠ "" then
+			set val to my get_formatted_reference(citekey)
+			if val is not missing value and val ≠ "" then
+				add custom meta data val for reference_field to rec
+			else if val = "" then
+				my report("Received an empty string as the value of the " ¬
+						  & "field '" & reference_field & "' for the record " ¬
+						  & "with the '" & key_field & "' value of '" & citekey ¬
+						  & "' (document titled '" & recname & "')")
+			else 
+				my report("Could not get the value of the field '" ¬
+						  & reference_field & "' for the record with the '" ¬
+						  & key_field & "' value of '" & citekey ¬
+						  & "' (document titled '" & recname & "')")
+			end if
+		else
+			my report("No " & key_field & " field value found in the" ¬
+					  & "record for the document titled '" & recname & "'")
+		end if
+	end tell
+end set_reference_field
 
 -- Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
--- Explanation for what's happening below.
---
--- I define a DEVONthink indexed folder over my Zotero attachments folder. This
--- creates database entries for every file (mostly PDF files) that I store in
--- Zotero. In my DEVONthink configuration, I define several custom metadata
--- fields. One of those custom metadata fields is "Citekey", which I use to
--- store the BibTeX citekey value of the corresponding Zotero bib entry. The
--- citekey of each Zotero bibliography item is maintained by the Zotero plugin
--- Better BibTeX; the value in the DEVONthink record is simply a copy of what's
--- found in Zotero. The citekey value of the DEVONthink records is set by a
--- Smart Rule elsewhere in my setup.
---
--- Another custom metadata field I use in DEVONthink is "Reference", to store a
--- formatted reference string generated from the Zotero bib entry. This is just
--- a text string like "Name, A. (2020). Paper title. Journal, 5(20):41-42."
--- The purpose of storing a formatted reference string in DEVONthink records is
--- to make it easier to get *some* kind of formatted reference string easily,
--- without having to jump to Zotero to get it. Other Smart Rules in my
--- DEVONthink setup make use of this field value.
---
--- The purpose of the code here is to set the value of this "Reference" field.
---
--- Better BibTeX uses the Zotero Connector facility, in which Zotero operates
--- a server listening on local port 23119. Plugins like BBT can register an
--- endpoint with this server to provide clients with the ability to control
--- them via a JSON-RPC protocol. The methods offered by BBT are described
--- at https://retorque.re/zotero-better-bibtex/exporting/json-rpc/index.html
--- One of the available methods is "item.bibliography", which takes a citekey
--- string and returns a formatted reference string. The format of the reference
--- string is determined by Zotero preferences (not BBT or the client program),
--- specifically, the user's setting for the Zotero "Quick Copy" command in
--- the Export section of the Zotero preferences. (In my case, I use the
--- American Psychological Associations.'s APA 7 reference format for
--- references, both because I'm used to it from long ago and because I find it
--- provides the most complete information; however, the code here does not
--- care about the actual quick copy format the user has selected.)
---
--- The code below assumes it is being invoked by a DEVONthink Smart Rule that
--- searches the (DEVONthink) indexed folder of Zotero attachments. As mentioned
--- above, in my setup, each DEVONthink record in that folder has a "Citekey"
--- field value. The procedure for filling in the formatted reference field
--- value is actually quite straightforward:
---
---   1. read the record's "Citekey" field value
---   2. use it in a call on the BBT JSON-RPC endpoint "item.bibliography"
---   3. save the returned value in the custom metadata field for "Reference"
---
--- Note: storing the citekey and formatted reference in DEVONthink is
--- admittedly a little bit dangerous because if the corresponding item in
--- Zotero is updated, nothing in my current DEVONthink setup will detect the
--- discrepancy. I should find a solution to that some day.
 
 on performSmartRule(selected_records)
 	tell application id "DNtp"
 		try
-			repeat with _record in selected_records
-				set recname to name of _record
-				set citekey to get custom meta data for key_field from _record
-				if citekey ≠ "" then
-					set val to my formatted_reference(citekey)
-					if val is not missing value and val ≠ "" then
-						add custom meta data val for reference_field to _record
-					else if val = "" then
-						my report("Received an empty string as the " ¬
-								  & "formatted reference for cite key " ¬
-								  & citekey & " (document: " & recname & ")")
-					else 
-						my report("Could not get formatted reference for " ¬
-								  & "cite key " & citekey & " (document: " ¬
-								  & recname & ")")
-					end if
-				else
-					my report("No " & key_field & " field value found " ¬
-							  & "in record for " & recname)
-				end if
+			repeat with rec in selected_records
+				my set_reference_field(rec)
 			end repeat
 		on error msg number code
 			if the code is not -128 then
-				display alert "DEVONthink" message msg as warning
+				my report(msg & " (error " & code & ")")
 			end if
 		end try
 	end tell
