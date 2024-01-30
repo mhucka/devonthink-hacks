@@ -153,13 +153,13 @@ on http_post(endpoint, headers, json_record)
 				sendSynchronousRequest:request ¬
 					returningResponse:(reference) |error|:(reference)
 			if not err is missing value then
-				my report("Error attempting to connect to " & endpoint ¬
-						  & ": " & (err's localizedDescription() as text))
+				error ("Error attempting to connect to " & endpoint ¬
+					   & ": " & (err's localizedDescription() as text))
 				return missing value
 			else if response's statusCode() >= 400 then
 				set code to response's statusCode()
-				my report("Connection failure (HTTP code " & code ¬
-						  & ") for " & endpoint)
+				error ("Connection failure (HTTP status " & code ¬
+					   & ") for " & endpoint)
 				return missing value
 			else if returned_data is missing value then
 				my report("Empty response from " & endpoint)
@@ -251,6 +251,7 @@ on performSmartRule(selected_records)
 		on error msg number code
 			if the code is not -128 then
 				my report(msg & " (error " & code & ")")
+				display alert "DEVONthink error" message msg as warning
 			end if
 		end try
 	end tell
