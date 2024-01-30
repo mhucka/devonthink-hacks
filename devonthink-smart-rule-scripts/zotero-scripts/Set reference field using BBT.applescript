@@ -39,6 +39,31 @@ property reference_field: "reference"
 
 -- Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+-- Log a message in DEVONthink's log, prepended with the name of this script.
+on report(error_text)
+	script wrapperScript
+		property ca : a reference to current application
+		use framework "Foundation"
+		on script_filename()
+			tell application "System Events"
+				set my_alias to path to me
+				set file_url to ca's NSURL's fileURLWithPath:(name of my_alias)
+				set fname to file_url's URLByDeletingPathExtension()'s ¬
+					lastPathComponent()
+				return fname as string
+			end tell
+		end script_filename
+		on report(error_text)
+			tell application id "DNtp"
+				log message my script_filename() info error_text
+			end tell
+			-- This one is for environments outside DEVONthink.
+			log error_text
+		end report
+	end script
+	return wrapperScript's report(error_text)
+end report
+
 -- Remove leading and trailing whitespace from the text and return the result.
 on trimmed(raw_text)
 	script wrapperScript
@@ -79,8 +104,8 @@ on http_post(endpoint, headers, json_record)
 			set {payload, err} to ca's NSJSONSerialization's ¬
 				dataWithJSONObject:jdict options:0 |error|:(reference)
 			if not err is missing value then
-				log "Problem attempting to encode payload for " & endpoint & ¬
-					": " & err's localizedDescription() as text
+				my report("Problem encoding payload for " & endpoint ¬
+						  & ": " & err's localizedDescription() as text)
 				return missing value
 			end if
 			request's setHTTPBody:payload
@@ -91,15 +116,16 @@ on http_post(endpoint, headers, json_record)
 				sendSynchronousRequest:request ¬
 					returningResponse:(reference) |error|:(reference)
 			if not err is missing value then
-				log "Error attempting to connect to " & endpoint & ": " & ¬
-					(err's localizedDescription() as text)
+				my report("Error attempting to connect to " & endpoint ¬
+						  & ": " & (err's localizedDescription() as text))
 				return missing value
 			else if response's statusCode() >= 400 then
 				set code to response's statusCode()
-				log "Connection failure (HTTP code " & code & ") for " & endpoint
+				my report("Connection failure (HTTP code " & code ¬
+						  & ") for " & endpoint)
 				return missing value
 			else if returned_data is missing value then
-				log "Empty response from " & endpoint
+				my report("Empty response from " & endpoint)
 				return missing value
 			end if
 		
@@ -112,7 +138,7 @@ on http_post(endpoint, headers, json_record)
 			set {json_dict, err} to ca's NSJSONSerialization's ¬
 				JSONObjectWithData:result_data options:0 |error|:(reference)
 			if json_dict is missing value then
-				log "Could not parse returned result as JSON from " & endpoint
+				my report("Could not parse result from BBT as JSON")
 				return missing value
 			end if
 			return item 1 of (parent's NSArray's arrayWithObject:json_dict)
@@ -213,14 +239,20 @@ on performSmartRule(selected_records)
 				set citekey to get custom meta data for key_field from _record
 				if citekey ≠ "" then
 					set val to my formatted_reference(citekey)
-					if val is not missing value then
+					if val is not missing value and val ≠ "" then
 						add custom meta data val for reference_field to _record
-					else
-						log "Could not get reference value for " & recname
+					else if val = "" then
+						my report("Received an empty string as the " ¬
+								  & "formatted reference for cite key " ¬
+								  & citekey & " (document: " & recname & ")")
+					else 
+						my report("Could not get formatted reference for " ¬
+								  & "cite key " & citekey & " (document: " ¬
+								  & recname & ")")
 					end if
 				else
-					log "No " & key_field & " field value found " & ¬
-						"in record for " & recname
+					my report("No " & key_field & " field value found " ¬
+							  & "in record for " & recname)
 				end if
 			end repeat
 		on error msg number code
