@@ -34,7 +34,7 @@ endif
 # The following is based on the approach posted by Jonathan Ben-Avraham to
 # Stack Overflow in 2014 at https://stackoverflow.com/a/25668869
 
-programs_needed = osacompile yq fileicon
+programs_needed = osacompile yq fileicon convert
 TEST := $(foreach p,$(programs_needed),\
 	  $(if $(shell which $(p)),_,$(error Cannot find program "$(p)")))
 
@@ -55,6 +55,7 @@ help:
 	| sed 'N;s/\n/###/' \
 	| sed -n 's/^#: \(.*\)###\([a-zA-Z0-9_-]*\):.*/$(color)\2$(reset):###\1/p' \
 	| column -t -s '###'
+
 
 # Create icon file ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -94,9 +95,10 @@ icon.png: icon.svg
 # Make file pattern matching, and then replace every space character in
 # each pathname with a question mark character.
 
-sources = $(shell find . -iname '*.applescript' | cut -d/ -f2- | tr ' ' '?')
+sources = $(shell find . -iname '*.applescript' -maxdepth 1 | cut -d/ -f2- | tr ' ' '?')
 
-# Next, define a function named "q2s" to replace question marks by spaces.
+# Next, define a function named "q2s" to replace question marks by spaces,
+# using an absolutely bonkers trick to assign a space character to "space".
 
 space :=
 space +=
@@ -113,7 +115,7 @@ q2s = $(subst ?, $(space),$1)
 # act on the files themselves. (That's where q2s comes in.)
 
 .SECONDEXPANSION:
-%.scpt: $$(subst $$(space),\$$(space),%).applescript
+%.scpt: %.applescript
 	osacompile -o "$(call q2s,$*.scpt)" "$<"
 
 # The final ingredient is to define the target "compile" such that it depends
@@ -141,7 +143,7 @@ destdir1 = "$(HOME)/Library/Application?Scripts/com.devon-technologies.think3/Me
 destdir2 = "$(HOME)/Library/Application?Scripts/com.devon-technologies.think3/Toolbar"
 
 .SECONDEXPANSION:
-$(destdir)/%.scpt: $$(subst $$(space),\$$(space),%).applescript
+$(destdir)/%.scpt: %.applescript
 	install -bpS "$(call q2s,$*.scpt)" $(call q2s,$(destdir1))
 	install -bpS "$(call q2s,$*.scpt)" $(call q2s,$(destdir2))
 
@@ -155,7 +157,6 @@ install: $(addprefix $(destdir)/,$(sources:.applescript=.scpt))
 #: Clean this directory.
 clean:
 	rm -rf *.scpt *.png
-	@echo ✨ Cleaned! ✨
 
 
 # Miscellaneous directives ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -172,5 +173,3 @@ link   := $(shell tput setaf 111)
 reset  := $(shell tput sgr0)
 
 .PHONY: help clean joke
-
-.SILENT: clean

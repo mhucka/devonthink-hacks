@@ -1,4 +1,4 @@
-# My generic Makefile for compiling AppleScript files.
+# Summary: my generic Makefile for compiling AppleScript files.
 #
 # Copyright 2024 Michael Hucka.
 # License: MIT License – see file "LICENSE" in the project website.
@@ -51,9 +51,10 @@ help:
 # Make file pattern matching, and then replace every space character in
 # each pathname with a question mark character.
 
-sources = $(shell find . -iname '*.applescript' | cut -d/ -f2- | tr ' ' '?')
+sources = $(shell find . -iname '*.applescript' -maxdepth 1 | cut -d/ -f2- | tr ' ' '?')
 
-# Next, define a function named "q2s" to replace question marks by spaces.
+# Next, define a function named "q2s" to replace question marks by spaces,
+# using an absolutely bonkers trick to assign a space character to "space".
 
 space :=
 space +=
@@ -70,7 +71,7 @@ q2s = $(subst ?, $(space),$1)
 # act on the files themselves. (That's where q2s comes in.)
 
 .SECONDEXPANSION:
-%.scpt: $$(subst $$(space),\$$(space),%).applescript
+%.scpt: %.applescript
 	osacompile -o "$(call q2s,$*.scpt)" "$<"
 
 # The final ingredient is to define the target "compile" such that it depends
@@ -86,12 +87,12 @@ compile: $(sources:.applescript=.scpt)
 # Install binaries ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Note the use of ? in the directory name below, instead of the space character
-# (i.e. ~/Library/Application Scripts/com.devon-technologies.think3/Menu).
+# (i.e. ~/Library/Application Scripts/com.devon-technologies.think3/Smart Rules).
 
 destdir = "$(HOME)/Library/Application?Scripts/com.devon-technologies.think3/Smart?Rules"
 
 .SECONDEXPANSION:
-$(destdir)/%.scpt: $$(subst $$(space),\$$(space),%).applescript
+$(destdir)/%.scpt: %.applescript
 	install -bpS "$(call q2s,$*.scpt)" $(call q2s,$(destdir))
 
 #: Install the compiled scripts in DEVONthink's script directory.
@@ -103,7 +104,6 @@ install: $(addprefix $(destdir)/,$(sources:.applescript=.scpt))
 #: Clean this directory.
 clean:
 	rm -rf *.scpt
-	@echo ✨ Cleaned! ✨
 
 
 # Miscellaneous directives ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -120,5 +120,3 @@ link   := $(shell tput setaf 111)
 reset  := $(shell tput sgr0)
 
 .PHONY: help clean joke
-
-.SILENT: clean
