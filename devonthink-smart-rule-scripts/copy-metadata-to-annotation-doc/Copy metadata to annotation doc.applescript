@@ -20,7 +20,7 @@ use scripting additions
 -- Config variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -- The following are specific to my DEVONthink configuration.
-property custom_fields: {"citekey", "type", "year", "abstract"}
+property custom_fields: {"Citekey", "Type", "Year", "Abstract", "Reference"}
 
 -- Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
