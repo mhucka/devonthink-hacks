@@ -1,0 +1,12 @@
+/* Localized Strings */
+
+"Annotation" = "Annotation";
+"Annotations" = "Annotationen";
+"Re: Document: " = "Re: Dokument: ";
+"Original URL" = "Ursprüngliche URL";
+"Click here to view annotated document" = "Hier klicken, um das annotierte Dokument anzuzeigen";
+
+/* Error messages */
+"No document shown. Please select a document, then try again." = "Kein Dokument angezeigt. Bitte wählen Sie ein Dokument aus und probieren es dann nocheinmal.";
+"Could not create the 'annotations' group." = "Konnte die Gruppe 'Annotationen' nicht erzeugen.";
+"An error occured when adding the annotation." = "Beim Hinzufügen der Annotation ist ein Fehler aufgetreten.";
