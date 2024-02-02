@@ -23,4 +23,12 @@ ln -s ~/projects/software/repos/devonthink-hacks/templates/Templates.noindex
 
 DEVONthink includes a lot of default templates, and when you upgrade DEVONthink, it rewrites its default templates in `Templates.noindex`. Thankfully all of those DEVONthink-provided templates are in subdirectories, so we can tell them apart from personal additions. I don't keep their defaults in version control and there's a `.gitignore` file inside `Templates.noindex` here to leave them out of git.
 
-I personally don't use any of the default templates, and would rather that DEVONthink didn't keep adding them back to my `Templates.noindex` directory. It would be possible to prevent DEVONthink from overwriting `Templates.noindex` by locking the directory, but then it would be a pain to update my own templates. So, I live it.
+(I personally don't use any of the default templates, and would rather that DEVONthink didn't keep adding them back to my `Templates.noindex` directory. It would be possible to prevent DEVONthink from overwriting `Templates.noindex` by locking the directory, but then it would be a pain to update my own templates. So, I live with the current situation.)
+
+To make the templates available on my iPad and iPhone, I create hard links in an iCloud storage folder. On the Mac, at leat in macOS Ventura, the location of a user's iCloud drive is
+
+```
+~/Library/Mobile Documents/com~apple~CloudDocs/
+```
+
+Inside that, I create a `DEVONthink templates` directory, then inside _that_, I put hard links to all the template files folder. The files are in a flat organization, without subdirectories, because I don't have enough templates to be worth making it more complicated than that.
