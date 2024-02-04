@@ -141,7 +141,8 @@ on get_annotated_record(this_record)
 					return incoming_record
 				end if
 			end if
-		  end repeat
+		end repeat
+		return missing value
 	end tell
 end get_annotated_record
 
@@ -167,7 +168,8 @@ on performSmartRule(selected_records)
 			set md_records to {}
 			repeat with rec in selected_records
 				set rectype to (type of rec) as string
-				if rectype = "markdown" or rectype = "«constant Ctypmkdn»" then
+				if rectype is in {"markdown", "«constant Ctypmkdn»", ¬
+								  "«constant ****mkdn»"} then
 					set end of md_records to rec
 				end if
 			end repeat
@@ -192,18 +194,22 @@ on performSmartRule(selected_records)
 				-- (i.e., what is being annotated), not the current document,
 				-- as described on p. 127 of the user manual for vers. 3.9.4.
 				set source_record to my get_annotated_record(rec)
-				set source_name to name of source_record
-				set source_url to reference URL of source_record as string
-				set body to my replace("%documentName%", body, source_name, true)
-				set body to my replace("%documentURL%", body, source_url, false)
-
-				-- Iterate over the list of custom placeholders.
-				repeat with field_name in custom_fields
-					local placeholder, value
-					set placeholder to "%" & custom_prefix & field_name & "%"
-					set value to get custom meta data for field_name from rec
-					set body to my replace(placeholder, body, value, true)
-				end repeat
+				if source_record is missing value then
+					my report("could not find source record for " & name of rec)
+				else
+					set source_name to name of source_record
+					set source_url to reference URL of source_record as string
+					set body to my replace("%documentName%", body, source_name, true)
+					set body to my replace("%documentLink%", body, source_url, false)
+	
+					-- Iterate over the list of custom placeholders.
+					repeat with field_name in custom_fields
+						local placeholder, value
+						set placeholder to "%" & custom_prefix & field_name & "%"
+						set value to get custom meta data for field_name from rec
+						set body to my replace(placeholder, body, value, true)
+					end repeat
+				end if
 
 				-- Replace the record body if we made it this far.
 				set plain text of rec to body
