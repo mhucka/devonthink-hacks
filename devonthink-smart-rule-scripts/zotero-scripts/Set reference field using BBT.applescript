@@ -225,8 +225,8 @@ on set_reference_field(rec)
 			else if val = "" then
 				my report("Received an empty string as the value of the " ¬
 						  & "field '" & reference_field & "' for the record " ¬
-						  & "with the '" & key_field & "' value of '" & citekey ¬
-						  & "' (document titled '" & recname & "')")
+						  & "with the '" & key_field & "' field value of '" ¬
+						  & citekey & "' (document titled '" & recname & "')")
 			else 
 				my report("Could not get the value of the field '" ¬
 						  & reference_field & "' for the record with the '" ¬
@@ -251,7 +251,7 @@ on performSmartRule(selected_records)
 		on error msg number code
 			if the code is not -128 then
 				my report(msg & " (error " & code & ")")
-				display alert "DEVONthink error" message msg as warning
+				display alert "DEVONthink" message msg as warning
 			end if
 		end try
 	end tell
