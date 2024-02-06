@@ -1,16 +1,15 @@
-# Summary: workflow to run Baler.
-#
-# Copyright 2024 Michael Hucka.
-# License: MIT license – see file "LICENSE" in the project website.
-# Website: https://github.com/mhucka/devonthink-hacks
+# GitHub Actions workflow for Baler (BAd Link reportER) version 2.0.2.
+# This is available as the file "sample-workflow.yml" from the source
+# code repository for Baler: https://github.com/caltechlibrary/baler
 
 name: Bad Link Reporter
 
 # Configure this section ─────────────────────────────────────────────
 
 env:
-  # Files examined by the workflow:
-  files: '*.md'
+  # Files to check. (Put patterns on separate lines, no leading dash.)
+  files: |
+    **/*.md
 
   # Label assigned to issues created by this workflow:
   labels: bug

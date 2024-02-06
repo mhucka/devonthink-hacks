@@ -1,4 +1,10 @@
-name: Lint Markdown files
+# Summary: GitHub Actions workflow to run a Markdown linter on .md files.
+#
+# Copyright 2024 California Institute of Technology.
+# License: Modified BSD 3-clause – see file "LICENSE" in the project website.
+# Website: https://github.com/caltechlibrary/devonthink-hacks
+
+name: Markdown file linter
 run-name: Lint Markdown files after ${{github.event_name}} by ${{github.actor}}
 
 on:
@@ -18,3 +24,15 @@ on:
 
 jobs:
   lint:
+    name: Run Markdown linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out copy of git repository.
+        uses: actions/checkout@v4
+
+      - name: Run Markdownlint on .md files.
+        uses: DavidAnson/markdownlint-cli2-action@v15
+        with:
+          config: .markdownlint.json
+          globs: |
+            *.md
