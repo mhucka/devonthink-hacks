@@ -16,4 +16,4 @@ By putting it in both locations, the program becomes accessible from both the _S
 
 ## About the icon
 
-The [vector artwork](https://thenounproject.com/icon/pointer-330358/) used as a starting point for the icon created by [Shital Patel](https://thenounproject.com/shital777/)  It is licensed under the Creative Commons [Attribution 3.0 Unported](https://creativecommons.org/licenses/by/3.0/deed.en) license.
+The [vector artwork](https://thenounproject.com/icon/pointer-330358/) used as a starting point for the icon was created by [Shital Patel](https://thenounproject.com/shital777/) for the Noun Project.  It is licensed under the Creative Commons [Attribution 3.0 Unported](https://creativecommons.org/licenses/by/3.0/deed.en) license.
