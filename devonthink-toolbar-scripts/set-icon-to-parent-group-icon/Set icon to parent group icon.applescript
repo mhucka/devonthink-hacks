@@ -35,16 +35,22 @@ end report
 
 on act_on_record(rec)
 	tell application id "DNtp"
-		set rec_type to (type of rec) as string
-		if rec_type is in allowed_types then
-			set parent_group to location group of rec
-			-- Note: *must* set this directly; can't use intermediate variable.
-			set thumbnail of rec to thumbnail of parent_group
-		else
-			set rname to name of rec
-			-- Don't display alert here in case the user selected many items.
-			my report("Icon not changed because item is not a group: " & rname)
+		set rtype to (type of rec) as string
+		if rtype is not in allowed_types then
+			set msg to "The following item has type \"" & rtype & "\", which " ¬
+				& "is not one of the expected types. Change its icon anyway? " ¬
+				& linefeed & linefeed & (name of rec)
+			display dialog msg buttons {"Cancel", "OK"} ¬
+			 	default button 1 with icon 1 giving up after 60
+			if button returned of result = "Cancel" then
+				error "User cancelled operation"
+			else if gave up of result then
+				error "Timed out waiting for user input"
+			end if
 		end if
+		set parent_group to location group of rec
+		-- Note: *must* set this directly; can't use intermediate variable.
+		set thumbnail of rec to thumbnail of parent_group
 	end tell
 end act_on_record
 
@@ -58,8 +64,8 @@ on performSmartRule(selected_records)
 				my act_on_record(rec)
 			end repeat
 		on error msg number err
-			if the code is not -128 then
-				my report(msg & " (error " & code & ")")
+			if the err is not -128 then       -- (Code -128 => user cancelled.)
+				my report(msg & " (error " & err & ")")
 				display alert "DEVONthink" message msg as warning
 			end if
 		end try
