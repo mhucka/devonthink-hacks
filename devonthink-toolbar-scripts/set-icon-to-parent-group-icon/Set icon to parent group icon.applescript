@@ -1,25 +1,25 @@
--- Summary: set the icon of selected items to the icon of their parent group.
---
--- Copyright 2024 Michael Hucka.
--- License: MIT License – see file "LICENSE" in the project website.
--- Website: https://github.com/mhucka/devonthink-hacks
+# Summary: set the icon of selected items to the icon of their parent group.
+#
+# Copyright 2024 Michael Hucka.
+# License: MIT License – see file "LICENSE" in the project website.
+# Website: https://github.com/mhucka/devonthink-hacks
 
 use AppleScript version "2.5"
 use scripting additions
 
--- ──── Config variables ──────────────────────────────────────────────────────
+# ~~~~ Config variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--- The record types whose icons will be changed by this script. I don't find
--- it useful to change anything except groups (regular & smart groups), with
--- the exception that I sometimes use links ("bookmarks" in DEVONthink terms)
--- to point to groups. That's why bookmarks are in this list.
+# The record types whose icons will be changed by this script. I don't find
+# it useful to change anything except groups (regular & smart groups), with
+# the exception that I sometimes use links ("bookmarks" in DEVONthink terms)
+# to point to groups. That's why bookmarks are in this list.
 property allowed_types: {"group", "«constant ****DTgr»", ¬
 						 "smart group", "«constant ****DTsg»", ¬
 						 "bookmark", "«constant ****DTnx»"}
 
--- ──── Helper functions ──────────────────────────────────────────────────────
+# ~~~~ Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--- Log a message in DEVONthink's log and include the name of this script.
+# Log a message in DEVONthink's log and include the name of this script.
 on report(error_text)
 	local script_path
 	tell application "System Events"
@@ -28,10 +28,10 @@ on report(error_text)
 	tell application id "DNtp"
 		log message script_path info error_text
 	end tell
-	log error_text				-- Useful when running in a debugger.
+	log error_text				# Useful when running in a debugger.
 end report
 
--- ──── Main body ─────────────────────────────────────────────────────────────
+# ~~~~ Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 on act_on_record(rec)
 	tell application id "DNtp"
@@ -49,14 +49,14 @@ on act_on_record(rec)
 			end if
 		end if
 		set parent_group to location group of rec
-		-- Note: *must* set this directly; can't use intermediate variable.
+		# Note: *must* set this directly; can't use intermediate variable.
 		set thumbnail of rec to thumbnail of parent_group
 	end tell
 end act_on_record
 
--- ──── Interfaces to DEVONthink ──────────────────────────────────────────────
+# ~~~~ Interfaces to DEVONthink ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--- Allow execution as part of a Smart Rule.
+# Allow execution as part of a Smart Rule.
 on performSmartRule(selected_records)
 	tell application id "DNtp"
 		try
@@ -64,7 +64,7 @@ on performSmartRule(selected_records)
 				my act_on_record(rec)
 			end repeat
 		on error msg number err
-			if the err is not -128 then       -- (Code -128 => user cancelled.)
+			if the err is not -128 then     # (Code -128 means user cancelled.)
 				my report(msg & " (error " & err & ")")
 				display alert "DEVONthink" message msg as warning
 			end if
@@ -72,7 +72,7 @@ on performSmartRule(selected_records)
 	end tell
 end performSmartRule
 
--- Allow execution outside of a Smart Rule (e.g., in a debugger).
+# Allow execution outside of a Smart Rule (e.g., in a debugger).
 tell application id "DNtp"
 	my performSmartRule(selection as list)
 end tell
