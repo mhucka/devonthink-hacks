@@ -19,7 +19,7 @@ property allowed_types: {"group", "«constant ****DTgr»", ¬
 
 # ~~~~ Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Log a message in DEVONthink's log and include the name of this script.
+# Log a message in DEVONthink's log and include the path to this script.
 on report(error_text)
 	local script_path
 	tell application "System Events"
@@ -31,6 +31,28 @@ on report(error_text)
 	log error_text				# Useful when running in a debugger.
 end report
 
+# Return the given file name without its file name extension, if any.
+on remove_ext(file_name)
+	script wrapperScript
+		property ca: a reference to current application
+		use framework "Foundation"
+		on remove_ext(file_name)
+			set u to ca's NSURL's fileURLWithPath:file_name
+			return u's URLByDeletingPathExtension()'s lastPathComponent() as text
+		end remove_ext
+	end script
+	return wrapperScript's remove_ext(file_name)
+end remove_ext
+
+# Return the file name of this script as a string, minus the extension.
+on get_script_name()
+    tell application "System Events"
+        set path_alias to path to me
+		set file_name to name of path_alias
+		return my remove_ext(file_name)
+    end tell
+end get_script_name
+
 # ~~~~ Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 on act_on_record(rec)
@@ -40,10 +62,13 @@ on act_on_record(rec)
 			set msg to "The following item has type \"" & rtype & "\", which " ¬
 				& "is not one of the expected types. Change its icon anyway? " ¬
 				& linefeed & linefeed & (name of rec)
-			display dialog msg buttons {"Cancel", "OK"} ¬
-			 	default button 1 with icon 1 giving up after 60
+			display dialog msg buttons {"Set icon", "Skip", "Cancel"} ¬
+				with title my get_script_name() with icon 1 ¬
+			 	default button 1 giving up after 60
 			if button returned of result = "Cancel" then
 				error "User cancelled operation"
+			else if button returned of result = "Skip" then
+				return
 			else if gave up of result then
 				error "Timed out waiting for user input"
 			end if
