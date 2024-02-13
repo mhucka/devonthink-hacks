@@ -56,7 +56,7 @@ sources = $(shell find . -iname '*.applescript' -maxdepth 1 | cut -d/ -f2- | tr 
 # Next, define a function named "q2s" to replace question marks by spaces,
 # using an absolutely bonkers trick to assign a space character to "space".
 
-space :=
+space := 
 space +=
 q2s = $(subst ?, $(space),$1)
 
