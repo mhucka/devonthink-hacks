@@ -97,7 +97,7 @@ end import_item
 
 # Tell DEVONthink to import a list of items. It will only ask for the
 # destination and tags once, then move all items into the destination and
-# tag them all with the same set of tags.
+# tag them all with the same set of tags. (It will not ask for item names.)
 on import_all_items(item_list)
 	tell application "DEVONthink 3"
 		set msg to "Importing " & (count of item_list) & " files"
