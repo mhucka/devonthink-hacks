@@ -135,7 +135,6 @@ on act_on_record(rec, allowed_types)
 		end if
 		set parent_group to location group of rec
 		# Note: *must* set this directly; can't use intermediate variable.
-		return
 		set thumbnail of rec to thumbnail of parent_group
 	end tell
 end act_on_record
