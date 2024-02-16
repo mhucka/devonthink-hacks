@@ -158,7 +158,7 @@ on adding folder items to this_folder after receiving added_items
 		repeat with thing in added_items
 			set item_path to my get_path(thing)
 			if my get_ext(item_path) is not in {"download", "crdownload"} then
-				set item_list to item_list & thing
+				set end of item_list to thing
 			end if
 		end repeat
 		if (count of item_list) = 0 then
