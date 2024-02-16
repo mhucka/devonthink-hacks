@@ -13,7 +13,7 @@ use AppleScript version "2.5"
 use scripting additions
 
 on performSmartRule(selected_records)
-	tell application id "DNtp"
+	tell application "System Events"
 		delay 5
 	end tell
 end performSmartRule
