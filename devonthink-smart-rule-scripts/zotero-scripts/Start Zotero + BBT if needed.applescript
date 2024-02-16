@@ -51,8 +51,7 @@ on launch_application(app_name, activate_app)
 			set times_left to (times_left - 1)
 		end repeat
 		if times_left ≤ 0 then
-			error ("Folder action " & my get_script_name() & " timed " & ¬
-				"out waiting for " & app_name & " to launch.")
+			error "Timed out waiting for " & app_name & " to launch."
 		end if
 	end tell
 	if activate_app then
