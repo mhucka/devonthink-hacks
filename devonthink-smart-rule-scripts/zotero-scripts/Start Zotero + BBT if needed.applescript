@@ -35,6 +35,31 @@ on report(error_text)
 	log error_text				-- Useful when running in a debugger.
 end report
 
+# Launch application, wait to see it launched, and bring it to the front.
+# Only waits for a limited time, in case something is wrong.
+on launch_application(app_name, activate_app)
+	launch application app_name
+	tell application "System Events"
+		set times_left to 30			# 15 sec in 0.5 sec iterations
+		# This roundabout approach of testing process names is because the more
+		# direct "repeat until application app_name is running" causes errors.
+		repeat while times_left > 0
+			if count of (every process whose name is app_name) > 0 then
+				exit repeat
+			end if
+			delay 0.5
+			set times_left to (times_left - 1)
+		end repeat
+		if times_left ≤ 0 then
+			error ("Folder action " & my get_script_name() & " timed " & ¬
+				"out waiting for " & app_name & " to launch.")
+		end if
+	end tell
+	if activate_app then
+		tell application app_name to activate
+	end if
+end launch_application
+
 -- Return true if we connected to the BBT endpoint URL in < max_time seconds,
 -- false if there was no response, and an integer HTTP status code if there was
 -- a response but it was an HTTP code indicating a problem.
@@ -72,32 +97,27 @@ end connect_to_bbt
 -- Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 on performSmartRule(selected_records)
+	my launch_application("Zotero", false)
 	tell application "Zotero"
-		if it is not running then
-			launch
-			repeat until application "Zotero" is running
-				delay 0.5
-			end repeat
-			-- Better BibTeX takes time to start up after Zotero is running.
-			-- Wait until we can connect to the JSON-RPC endpoint. Note: it's
-			-- okay to modify wait_time directly b/c every execution of this
-			-- script from a Smart Rule will reload the file and thus reset it.
-			set logged_error to false
-			repeat while wait_time > 0
-				set bbt_connection to my connect_to_bbt(1)
-				if bbt_connection is true then
-					return
-				else if (bbt_connection is not false) and not logged_error then
-					my report("Unable to connect to the Zotero Connector " ¬
-							  & "endpoint for Better BibTeX (HTTP code " ¬
-							  & bbt_connection & ") at " & bbt_api_endpoint)
-					set logged_error to true
-				end if
-				set wait_time to (wait_time - 1)
-				delay 1
-			end repeat
-			my report("Wait time exceeded for starting Zotero & Better BibTeX")
-		end if
+		-- Better BibTeX takes time to start up after Zotero is running.
+		-- Wait until we can connect to the JSON-RPC endpoint. Note: it's
+		-- okay to modify wait_time directly b/c every execution of this
+		-- script from a Smart Rule will reload the file and thus reset it.
+		set logged_error to false
+		repeat while wait_time > 0
+			set bbt_connection to my connect_to_bbt(1)
+			if bbt_connection is true then
+				return
+			else if (bbt_connection is not false) and not logged_error then
+				my report("Unable to connect to the Zotero Connector " ¬
+					& "endpoint for Better BibTeX (HTTP code " ¬
+					& bbt_connection & ") at " & bbt_api_endpoint)
+				set logged_error to true
+			end if
+			set wait_time to (wait_time - 1)
+			delay 1
+		end repeat
+		my report("Wait time exceeded for starting Zotero & Better BibTeX")
 	end tell
 end performSmartRule
 
