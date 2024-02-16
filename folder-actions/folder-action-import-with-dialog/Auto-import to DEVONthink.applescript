@@ -112,7 +112,7 @@ on import_all_items(item_list)
 	end tell
 end import_all_items
 
-# Move the item to the trash.
+# Move the item or items to the trash.
 on move_to_trash(item_list)
 	if class of item_list is not list then
 		set item_list to {item_list}
@@ -123,6 +123,31 @@ on move_to_trash(item_list)
 		end repeat
 	end tell
 end move_to_trash
+
+# Launch application, wait to see it launched, and bring it to the front.
+# Only waits for a limited time, in case something is wrong.
+on launch_application(app_name, activate_app)
+	launch application app_name
+	tell application "System Events"
+		set times_left to 30			# 15 sec in 0.5 sec iterations
+		# This roundabout approach of testing process names is because the more
+		# direct "repeat until application app_name is running" causes errors.
+		repeat while times_left > 0
+			delay 0.5
+			if count of (every process whose name is app_name) > 0 then
+				exit repeat
+			end if
+			set times_left to (times_left - 1)
+		end repeat
+		if times_left ≤ 0 then
+			error ("Folder action " & my get_script_name() & " timed " & ¬
+				"out waiting for " & app_name & " to launch.")
+		end if
+	end tell
+	if activate_app then
+		tell application app_name to activate
+	end if
+end launch_application
 
 # ~~~~ Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -136,25 +161,15 @@ on adding folder items to this_folder after receiving added_items
 				set item_list to item_list & thing
 			end if
 		end repeat
-
-		# If we have something left, start by launching DEVONthink, else stop.
-		if (count of item_list) is greater than 0 then
-			tell application "DEVONthink 3"
-				launch
-				repeat until application "DEVONthink 3" is running
-					delay 0.5
-				end repeat
-				activate
-			end tell
-		else
+		if (count of item_list) = 0 then
 			return
 		end if
 
-		# If we get here, we have something to do.
+		# Make sure DEVONthink is running, and then do the imports.
+		my launch_application("DEVONthink 3", true)
 		if (count of item_list) = 1 then
 			my import_item(first item of item_list)
 		else
-			set handle_individually to false
 			tell application "DEVONthink 3"
 				set answer to display dialog ¬
 					"Multiple items received. Handle individually, or as a group?" ¬
@@ -165,19 +180,16 @@ on adding folder items to this_folder after receiving added_items
 				if button returned of answer = "Cancel" then
 					return
 				else if button returned of answer = "Individually" then
-					set handle_individually to true
+					repeat with thing in item_list
+						my import_item(thing)
+					end repeat
+				else
+					my import_all_items(item_list)
 				end if
 			end tell
-			if handle_individually is true then
-				repeat with thing in item_list
-					my import_item(thing)
-				end repeat
-			else
-				my import_all_items(item_list)
-			end if
 		end if
 
-		# Do this last. If the user cancels, items will be left in the folder.
+		# Do this last, so that nothing is deleted if the user cancels.
 		my move_to_trash(item_list)
 	on error msg number err
 		if the err is not -128 then     # (Code -128 means user cancelled.)
