@@ -67,3 +67,7 @@ Makefile	text
 *.tiff	binary
 *.xls	binary
 *.zip	binary
+
+# Interpretation of Mac-specific files ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*.shortcut	binary
