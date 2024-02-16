@@ -133,10 +133,10 @@ on launch_application(app_name, activate_app)
 		# This roundabout approach of testing process names is because the more
 		# direct "repeat until application app_name is running" causes errors.
 		repeat while times_left > 0
-			delay 0.5
 			if count of (every process whose name is app_name) > 0 then
 				exit repeat
 			end if
+			delay 0.5
 			set times_left to (times_left - 1)
 		end repeat
 		if times_left ≤ 0 then
