@@ -12,4 +12,4 @@ A quick way to find out what is currently in the near-term plans for this projec
 
 ## Submitting contributions
 
-Please feel free to contact the author directly, or even better, jump right in and use the standard GitHub approach of forking the repo and creating a pull request.  When committing code changes and submitting pull requests, please write a clear log message for your commits.
+Please feel free to contact the author directly, or even better, jump right in and use the standard GitHub approach of forking the repo and creating a pull request. When committing code changes and submitting pull requests, please write a clear log message for your commits.

@@ -39,7 +39,7 @@ If you find an issue, please submit it in [the GitHub issue tracker](https://git
 
 ## Contributing
 
-I would be happy to receive your help and participation with enhancing the solutions and code contained here.  Please visit the [guidelines for contributing](CONTRIBUTING.md) for some tips on getting started.
+I would be happy to receive your help and participation with enhancing the solutions and code contained here. Please visit the [guidelines for contributing](CONTRIBUTING.md) for some tips on getting started.
 
 
 ## License
