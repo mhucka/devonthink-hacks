@@ -15,7 +15,7 @@ use scripting additions
 # inclusion or exclusion. Testing is done on both; i.e., an item's kind has to
 # be in the allow list and not be in the disallow list.
 
-property allowed_kinds: {"Group", "Smart Group", "Bookmark"}
+property allowed_kinds: {"Group", "Smart Group", "Bookmark", "internet location"}
 property disallowed_kinds: {}
 
 
@@ -99,9 +99,9 @@ on act_on_record(rec)
 			# Note: *must* set this directly; can't use intermediate variable.
 			set thumbnail of rec to thumbnail of parent_group
 		else
-			set msg to "The following item is of kind \"" & rkind & "\", which " ¬
-				& "is not one of the expected kinds. Should its icon be " ¬
-				& "changed anyway? " & linefeed & linefeed & (name of rec)
+			set msg to "The following item is of kind \"" & rkind & "\", " ¬
+				& "which is not one of the expected kinds. Should its icon " ¬
+				& "be changed anyway? " & linefeed & linefeed & (name of rec)
 			display dialog msg buttons {"Set icon", "Skip", "Cancel"} ¬
 				with title my get_script_name() with icon 1 ¬
 			 	default button 1 giving up after 60
