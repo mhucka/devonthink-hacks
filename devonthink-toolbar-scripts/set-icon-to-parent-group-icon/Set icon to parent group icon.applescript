@@ -7,15 +7,18 @@
 use AppleScript version "2.5"
 use scripting additions
 
+
 # ~~~~ Config variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# The next two variables together control which kinds of items can have their
+# The next two properties together control which kinds of items can have their
 # icons changed. There are two lists because, depending on how many things you
 # want to allow changing, it may be easier to express the condition by
-# inclusion or exclusion. Testing is done on both; i.e., an item's kind has to
-# be in the allow list and not be in the disallow list.
+# inclusion or exclusion. The code that sets icons tests on both; i.e., an
+# item's kind has to be in the allow list and not be in the disallow list.
 
-property allowed_kinds: {"Group", "Smart Group", "Bookmark", "internet location"}
+property allowed_kinds: {"Group", "Smart Group", ¬
+						 "Bookmark", "internet location"}
+
 property disallowed_kinds: {}
 
 
@@ -62,9 +65,9 @@ on act_on_record(rec)
 	tell application id "DNtp"
 		# For items at the root level, there's no parent to get an icon from.
 		if (location of rec) = "/" then
-			set msg to "The icon of this item cannot be set to the icon of " ¬
-				& "its parent group, because that parent is the root level " ¬
-				& "of the database:" & linefeed & linefeed & (name of rec)
+			set msg to "The icon of this item cannot be set because the " ¬
+				& "item is at the root level of the database:" & ¬
+				linefeed & linefeed & (name of rec)
 			display dialog msg buttons {"Skip", "Cancel"} ¬
 				with title my get_script_name() with icon 1 ¬
 			 	default button 1 giving up after 60
