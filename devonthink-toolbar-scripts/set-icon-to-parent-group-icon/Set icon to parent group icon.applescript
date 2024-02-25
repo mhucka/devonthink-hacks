@@ -13,7 +13,7 @@ use scripting additions
 # The next two properties together control which kinds of items can have their
 # icons changed automatically. There are two lists because, depending on how
 # many kinds of things you want to allow changing, it may be easier to express
-# the condition by inclusion or exclusion. The code that sets icons tests on
+# the condition by inclusion or exclusion. The code that sets icons tests
 # both; i.e., an item's kind has to be in the allow list and not be in the
 # disallow list. If an item's kind is not listed as allowed, this script will
 # ask if an exception should be made.
@@ -201,6 +201,8 @@ on performSmartRule(selected_records)
 end performSmartRule
 
 # Allow execution outside of a Smart Rule (e.g., in a debugger).
-tell application id "DNtp"
-	my performSmartRule(selection as list)
-end tell
+on run
+	tell application id "DNtp"
+		my performSmartRule(selection as list)
+	end tell
+end run
