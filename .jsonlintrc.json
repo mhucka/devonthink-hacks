@@ -1,0 +1,9 @@
+{
+  "comments": false,
+  "trailing-commas": false,
+  "duplicate-keys": false,
+  "log-files": false,
+  "compact": true,
+  "continue": true,
+  "patterns": ["**/*.json"]
+}
