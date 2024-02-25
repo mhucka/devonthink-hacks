@@ -3,9 +3,9 @@
 In my way of working with DEVONthink, I set DEVONthink group icons to colorful custom icons, and set all subgroups of a given group to the same icon as the parent group. The figure below shows an actual example.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".graphics/folder-icons-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset=".graphics/folder-icons-light.png">
-  <img width="500px" alt="Fragment of one of my databases, showing the use of custom icons and colors." src=".graphics/folder-icons-light.png">
+  <source media="(prefers-color-scheme: dark; max-width: 400px)" srcset=".graphics/folder-icons-dark.png">
+  <source media="(prefers-color-scheme: light; max-width: 400px)" srcset=".graphics/folder-icons-light.png">
+  <img width="400px" alt="Fragment of one of my databases, showing the use of custom icons and colors." src=".graphics/folder-icons-light.png">
 </picture>
 
 I also do something analogous with tags: certain tags get custom colors, and subtags of those tags are set to the same color. This approach helps make my database structure easier to notice more quickly.
