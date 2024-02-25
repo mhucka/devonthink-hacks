@@ -1,12 +1,11 @@
-CSS: x-devonthink-item://F97C31C4-88AD-417C-A90C-2E905D9E75BB?33
-Source-type: document in Zotero
+CSS: x-devonthink-item://C1043FB7-A957-4CCA-848D-D3FDB79B5C62
 Backlink: %documentLink%
 
-<div class="target"><a href="%documentLink%">%documentName%</a></div><img class="thumbnail" src="%documentLink%">
+<span class="target"><a href="%documentLink%">%documentName%</a></span><img class="thumbnail" src="%documentLink%">
 
 {{firstheading}}Full reference{{_heading}}
 
-%Reference%
+%bibReference%
 
 {{heading}}Topic area{{_heading}}
 
