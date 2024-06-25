@@ -52,10 +52,10 @@ on concat(string_list, separator)
     return output
 end concat
 
-on sh(paths, command)
+on sh(shell_search_path, command)
 	local output, path_env
     set output to ""
-	set path_env to "PATH=" & paths
+	set path_env to "PATH=" & shell_search_path
 	try
 		set output to do shell script (path_env & " " & command)
 	on error msg number code
@@ -66,13 +66,32 @@ on sh(paths, command)
 	return output
 end sh
 
+on command_found(shell_search_path, command)
+	local path_env
+	set path_env to "PATH=" & shell_search_path
+	try
+		do shell script (path_env & " command -V " & command)
+		return true
+	on error
+		return false
+	end try
+end command_found
+
+
 # ~~~~ Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+property search_path: my concat(shell_paths, ":")
+
 on performSmartRule(selected_records)
-	local paths, rec_path, quoted_path
+	local rec_path, quoted_path
+	if not my command_found(search_path, "exiftool") then
+		my report("Could not find program '" & command & "' on this " ¬
+			& "computer. The directories search were the following: " ¬
+			& concat(shell_paths, ", "))
+		return
+	end if
 	tell application id "DNtp"
 		try
-			set paths to my concat(shell_paths, ":")
 			repeat with rec in selected_records
 				if type of rec is PDF document then
 					# Embedded single quotes cause problems. Combo of changing
@@ -82,7 +101,7 @@ on performSmartRule(selected_records)
 					# type coercion will go wrong and cause an error.
 					set rec_path to path of rec
 					set quoted_path to quoted form of rec_path
-					my sh(paths, "exiftool -q -Keywords= " ¬
+					my sh(search_path, "exiftool -q -Keywords= " ¬
 						 & "-overwrite_original_in_place " & quoted_path)
 				end if
 			end repeat
