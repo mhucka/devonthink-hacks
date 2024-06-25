@@ -52,6 +52,7 @@ end concat
 
 on sh(paths, command)
 	local output
+    set output to ""
 	set path_env to "PATH=" & paths
 	try
 		set output to do shell script (path_env & " " & command)
