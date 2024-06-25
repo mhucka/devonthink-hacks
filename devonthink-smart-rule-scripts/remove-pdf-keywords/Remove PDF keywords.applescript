@@ -1,21 +1,21 @@
--- Summary: remove all PDF subject keywords from selected PDF files.
--- This calls "exiftool" as an external command-line program.
---
--- This is an AppleScript fragment that will only work as the script
--- executed by a Smart Rule in DEVONthink.
---
--- Copyright 2024 Michael Hucka.
--- License: MIT license – see file "LICENSE" in the project website.
--- Website: https://github.com/mhucka/devonthink-hacks
+# Summary: remove all PDF subject keywords from selected PDF files.
+# This calls "exiftool" as an external command-line program.
+#
+# This is an AppleScript fragment that will only work as the script
+# executed by a Smart Rule in DEVONthink.
+#
+# Copyright 2024 Michael Hucka.
+# License: MIT license – see file "LICENSE" in the project website.
+# Website: https://github.com/mhucka/devonthink-hacks
 
-use AppleScript version "2.5" -- Yosemite (10.10) or later
+use AppleScript version "2.5"
 use scripting additions
 
--- Config variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~ Config variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--- List used to set the shell's command search $PATH. The values cover the most
--- likely places where ExifTool may be found. If your copy of ExifTool is not
--- found in one of these locations, add the appropriate directory to this list.
+# List used to set the shell's command search $PATH. The values cover the most
+# likely places where ExifTool may be found. If your copy of ExifTool is not
+# found in one of these locations, add the appropriate directory to this list.
 property shell_paths: { ¬
 	"$PATH"				 , ¬
 	"$HOME/.local/bin"	 , ¬
@@ -25,18 +25,19 @@ property shell_paths: { ¬
 }
 
 
--- Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~ Helper functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
--- Log a message in DEVONthink's log and include the name of this script.
+# Log a message in DEVONthink's log and include the name of this script.
 on report(error_text)
 	local script_path
 	tell application "System Events"
 		set script_path to POSIX path of (path to me as alias)
 	end tell
 	tell application id "DNtp"
+		# Note: DEVONthink's "log" function is not the same as AppleScript's.
 		log message script_path info error_text
 	end tell
-	log error_text				-- Useful when running in a debugger.
+	log error_text			 # Useful when running in an AppleScript debugger.
 end report
 
 on concat(string_list, separator)
@@ -64,8 +65,7 @@ on sh(paths, command)
 	return output
 end sh
 
-
--- Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~ Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 on performSmartRule(selected_records)
 	tell application id "DNtp"
@@ -73,12 +73,12 @@ on performSmartRule(selected_records)
 			set paths to my concat(shell_paths, ":")
 			repeat with rec in selected_records
 				if type of rec is PDF document then
-					-- A problem for shell strings is embedded single
-					-- quotes. Combo of changing text delimiters & using
-					-- "quoted form of" seems to do the trick.
+					# A problem for shell strings is embedded single quotes.
+					# Combo of changing text delimiters & using "quoted form
+					# of" seems to do the trick.
 					set AppleScript's text item delimiters to "\\\\"
-					-- Don't combine the next 2 stmts b/c that will result in
-					-- type coercion will go wrong and cause an error.
+					# Don't combine the next 2 stmts b/c that will result in
+					# type coercion will go wrong and cause an error.
 					set rec_path to path of rec
 					set quoted_path to quoted form of rec_path
 					my sh(paths, "exiftool -q -Keywords= " ¬
@@ -95,7 +95,7 @@ on performSmartRule(selected_records)
 	end tell
 end performSmartRule
 
--- Scaffolding for execution outside of a Smart Rule (e.g., in a debugger).
+# Scaffolding for execution outside of a Smart Rule (e.g., in a debugger).
 tell application id "DNtp"
 	my performSmartRule(selection as list)
 end tell
