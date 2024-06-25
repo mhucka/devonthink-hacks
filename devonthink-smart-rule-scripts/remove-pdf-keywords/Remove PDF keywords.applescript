@@ -103,6 +103,7 @@ on performSmartRule(selected_records)
 					set quoted_path to quoted form of rec_path
 					my sh(search_path, "exiftool -q -Keywords= " ¬
 						 & "-overwrite_original_in_place " & quoted_path)
+					synchronize record rec
 				end if
 			end repeat
 		on error msg number code
