@@ -109,7 +109,6 @@ on performSmartRule(selected_records)
 		on error msg number code
 			if the code is not -128 then
 				my report(msg & " (error " & code & ")")
-				display alert "DEVONthink error" message msg as warning
 			end if
 		end try
 
