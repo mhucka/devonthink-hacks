@@ -41,6 +41,7 @@ on report(error_text)
 end report
 
 on concat(string_list, separator)
+	local output
     set output to ""
     repeat with i from 1 to count of string_list
         set output to output & item i of string_list
@@ -52,7 +53,7 @@ on concat(string_list, separator)
 end concat
 
 on sh(paths, command)
-	local output
+	local output, path_env
     set output to ""
 	set path_env to "PATH=" & paths
 	try
@@ -68,14 +69,14 @@ end sh
 # ~~~~ Main body ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 on performSmartRule(selected_records)
+	local paths, rec_path, quoted_path
 	tell application id "DNtp"
 		try
 			set paths to my concat(shell_paths, ":")
 			repeat with rec in selected_records
 				if type of rec is PDF document then
-					# A problem for shell strings is embedded single quotes.
-					# Combo of changing text delimiters & using "quoted form
-					# of" seems to do the trick.
+					# Embedded single quotes cause problems. Combo of changing
+					# delims & using "quoted form" (below) seems to solve it.
 					set AppleScript's text item delimiters to "\\\\"
 					# Don't combine the next 2 stmts b/c that will result in
 					# type coercion will go wrong and cause an error.
