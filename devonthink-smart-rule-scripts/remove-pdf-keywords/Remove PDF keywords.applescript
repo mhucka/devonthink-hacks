@@ -91,8 +91,8 @@ on performSmartRule(selected_records)
 		return
 	end if
 	tell application id "DNtp"
-		try
-			repeat with rec in selected_records
+		repeat with rec in selected_records
+			try
 				if type of rec is PDF document then
 					# Embedded single quotes cause problems. Combo of changing
 					# delims & using "quoted form" (below) seems to solve it.
@@ -105,12 +105,12 @@ on performSmartRule(selected_records)
 						 & "-overwrite_original_in_place " & quoted_path)
 					synchronize record rec
 				end if
-			end repeat
-		on error msg number code
-			if the code is not -128 then
-				my report(msg & " (error " & code & ")")
-			end if
-		end try
+			on error msg number code
+				if the code is not -128 then
+					my report(msg & " (error " & code & ")")
+				end if
+			end try
+		end repeat
 
 	end tell
 end performSmartRule
